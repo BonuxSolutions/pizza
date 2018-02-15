@@ -7,11 +7,8 @@ import org.junit.Test;
 import java.net.URL;
 import java.util.Optional;
 
-import static org.hamcrest.core.Is.*;
-
-
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.*;
 
 public class AppTest {
   @Test
@@ -35,5 +32,19 @@ public class AppTest {
 
     assertThat(maybePizza.isPresent(), is(true));
     maybePizza.ifPresent(pizza -> assertThat(pizza.toString(), is(result)));
+  }
+
+  @Test
+  public void testResultFormat() {
+    Result result =
+        new Result.Builder()
+            .withSlice(Slice.create(Point.create(0, 0), Point.create(2, 1)))
+            .withSlice(Slice.create(Point.create(0, 2), Point.create(2, 2)))
+            .withSlice(Slice.create(Point.create(0, 3), Point.create(2, 4)))
+            .build();
+
+    String expected = "3\n0 0 2 1\n0 2 2 2\n0 3 2 4";
+
+    assertEquals(expected, result.toString());
   }
 }
