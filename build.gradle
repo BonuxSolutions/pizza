@@ -30,3 +30,6 @@ dependencies {
 // Define the main class for the application
 mainClassName = 'App'
 
+task wrapper(type: Wrapper) {
+    gradleVersion = '4.5.1'
+}
