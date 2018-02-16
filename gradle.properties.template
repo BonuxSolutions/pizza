@@ -1,0 +1,2 @@
+# change this url in case you need to use a proxy
+maven_central=https://repo1.maven.org/maven2/
