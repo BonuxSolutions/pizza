@@ -3,44 +3,45 @@ package pizza;
 import java.util.ArrayList;
 import java.util.List;
 
-class Slice {
-  final Point p1, p2;
-
-  private Slice(Point p1, Point p2) {
-    this.p1 = p1;
-    this.p2 = p2;
-  }
-
-  static Slice create(Point p1, Point p2) {
-    return new Slice(p1, p2);
-  }
-
-  @Override
-  public String toString() {
-    return p1 + " " + p2;
-  }
-}
-
-class Point {
-  final int r, c;
-
-  private Point(int r, int c) {
-    this.r = r;
-    this.c = c;
-  }
-
-  static Point create(int r, int c) {
-    return new Point(r, c);
-  }
-
-  @Override
-  public String toString() {
-    return r + " " + c;
-  }
-}
 
 class Result {
-  final List<Slice> slices;
+  static class Slice {
+    private final Coord p1, p2;
+
+    private Slice(Coord p1, Coord p2) {
+      this.p1 = p1;
+      this.p2 = p2;
+    }
+
+    static Slice create(Coord p1, Coord p2) {
+      return new Slice(p1, p2);
+    }
+
+    @Override
+    public String toString() {
+      return p1 + " " + p2;
+    }
+  }
+
+  static class Coord {
+    private final int r, c;
+
+    private Coord(int r, int c) {
+      this.r = r;
+      this.c = c;
+    }
+
+    static Coord create(int r, int c) {
+      return new Coord(r, c);
+    }
+
+    @Override
+    public String toString() {
+      return r + " " + c;
+    }
+  }
+
+  private final List<Slice> slices;
 
   private Result(List<Slice> slices) {
     this.slices = new ArrayList<>(slices.size());
@@ -50,7 +51,7 @@ class Result {
   static class Builder {
     private List<Slice> slices;
 
-    public Builder() {this.slices = new ArrayList<>();}
+    Builder() {this.slices = new ArrayList<>();}
 
     public Builder withSlice(Slice slice) {
       slices.add(slice);

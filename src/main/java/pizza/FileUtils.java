@@ -7,8 +7,8 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.stream.Stream;
 
-import static pizza.FunctionsAndConstants.M;
-import static pizza.FunctionsAndConstants.T;
+import static pizza.Constants.M;
+import static pizza.Constants.T;
 
 abstract class FileUtils {
     static Pizza readInput(String filename) {
