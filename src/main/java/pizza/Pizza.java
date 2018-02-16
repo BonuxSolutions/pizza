@@ -77,6 +77,9 @@ final class Pizza {
 }
 
 final class PizzaSlicer {
+  static final int DEAD_END = -1;
+  static final int UNCHECKED = 0;
+
   final private Pizza pizza;
 
   class SlicesPerIteration {
@@ -112,7 +115,7 @@ final class PizzaSlicer {
         if (currentState.currentSliceNumber > 0) {
           for (int r1 = 0; r1 < pizza.R; r1++) {
             for (int c1 = 0; c1 < pizza.C; c1++) {
-              if (currentState.slices[r1][c1] == 0) {
+              if (currentState.slices[r1][c1] == UNCHECKED) {
                 this.x = r1;
                 this.y = c1;
                 return this;
@@ -135,7 +138,7 @@ final class PizzaSlicer {
       }
     }
     if (!anyValid) {
-      currentState.slices[p.x][p.y] = (-1);
+      currentState.slices[p.x][p.y] = DEAD_END;
     }
   }
 
