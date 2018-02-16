@@ -47,4 +47,33 @@ public class AppTest {
 
     assertEquals(expected, result.toString());
   }
+
+  @Test
+  public void testValid() {
+    Optional<Pizza> maybePizza =
+        Optional
+            .ofNullable(getClass().getClassLoader().getResource("example.in"))
+            .map(URL::getFile)
+            .map(FileUtils::readInput);
+    maybePizza.ifPresent(pizza -> {
+      PizzaSlicer ps = PizzaSlicer.create(pizza);
+      boolean result = ps.isValid(0, 0, 2, 1);
+      assertEquals(true, result);
+    });
+  }
+
+  @Test
+  public void testPizzaSlicer() {
+    Optional<Pizza> maybePizza =
+        Optional
+            .ofNullable(getClass().getClassLoader().getResource("example.in"))
+            .map(URL::getFile)
+            .map(FileUtils::readInput);
+
+    maybePizza.ifPresent(pizza -> {
+      PizzaSlicer ps = PizzaSlicer.create(pizza);
+      ps.nextValidSlice();
+      assertEquals(1, ps.currentState.currentSliceNumber);
+    });
+  }
 }
