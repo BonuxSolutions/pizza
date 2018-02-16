@@ -5,8 +5,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Arrays;
 
-import static pizza.FunctionsAndConstants.M;
-import static pizza.FunctionsAndConstants.T;
+import static pizza.Constants.M;
+import static pizza.Constants.T;
 
 abstract class FileUtils {
   static Pizza readInput(String filename) {
