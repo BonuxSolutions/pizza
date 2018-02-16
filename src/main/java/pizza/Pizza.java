@@ -8,7 +8,13 @@ import static pizza.Constants.T;
 
 class Pizza {
   private class SlicesPerIteration {
-    int[][] slices = new int[R][C];
+    int currentSliceNumber = 0;
+    /**
+     * this will be holder of slices in current iteration
+     * each cell belonging to some slice will have slice number
+     * which will be incremented whenever new slice is created
+     */
+    final int[][] slices = new int[R][C];
   }
 
   final int R, C, L, H;
@@ -67,8 +73,10 @@ class Pizza {
     }
   }
 
+  /**
+   * create new slice - increment currentSliceNumber and fill cells with that value
+   */
   void nextSlice() {
-
   }
 
   private boolean isValid(int r1, int c1, int r2, int c2, Pizza pizza) {
