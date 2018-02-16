@@ -16,7 +16,7 @@ abstract class FileUtils {
     StringBuilder contentBuilder = new StringBuilder();
 
     try (Stream<String> stream = Files.lines(Paths.get(filename), StandardCharsets.UTF_8)) {
-      stream.forEach(s -> contentBuilder.append(s));
+      stream.forEach(s -> contentBuilder.append(s).append("\n"));
     } catch (IOException e) {
       e.printStackTrace();
       throw new RuntimeException(e);

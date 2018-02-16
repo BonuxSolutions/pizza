@@ -57,7 +57,10 @@ public class AppTest {
             .map(FileUtils::readInput);
     maybePizza.ifPresent(pizza -> {
       PizzaSlicer ps = PizzaSlicer.create(pizza);
-      boolean result = ps.isValid(0, 0, 2, 1);
+      boolean result =
+          ps.isValid(0, 0, 2, 1) &&
+              ps.isValid(0, 2, 2, 2) &&
+              ps.isValid(0, 3, 2, 4);
       assertEquals(true, result);
     });
   }
