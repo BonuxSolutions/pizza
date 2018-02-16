@@ -38,9 +38,9 @@ public class AppTest {
   public void testResultFormat() {
     Result result =
         new Result.Builder()
-            .withSlice(Slice.create(Point.create(0, 0), Point.create(2, 1)))
-            .withSlice(Slice.create(Point.create(0, 2), Point.create(2, 2)))
-            .withSlice(Slice.create(Point.create(0, 3), Point.create(2, 4)))
+            .withSlice(Result.Slice.create(Result.Coord.create(0, 0), Result.Coord.create(2, 1)))
+            .withSlice(Result.Slice.create(Result.Coord.create(0, 2), Result.Coord.create(2, 2)))
+            .withSlice(Result.Slice.create(Result.Coord.create(0, 3), Result.Coord.create(2, 4)))
             .build();
 
     String expected = "3\n0 0 2 1\n0 2 2 2\n0 3 2 4";
