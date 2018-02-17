@@ -18,9 +18,7 @@ repositories {
     // You can declare any Maven/Ivy/file repository here.
     jcenter()
     // For some reason
-    maven {
-        url maven_central
-    }
+    mavenCentral()
 }
 
 dependencies {
