@@ -1,6 +1,8 @@
 package pizza;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import static pizza.Constants.T;
 
@@ -95,11 +97,11 @@ final class PizzaSlicer {
         final int[][] slices = new int[pizza.R][pizza.C];
     }
 
-    SlicesPerIteration currentState;
+    List<SlicesPerIteration> currentState;
 
     private PizzaSlicer(Pizza pizza) {
         this.pizza = pizza;
-        currentState = new SlicesPerIteration();
+        currentState = new ArrayList<>(pizza.C * pizza.R);
     }
 
     static PizzaSlicer create(Pizza pizza) {
@@ -113,46 +115,72 @@ final class PizzaSlicer {
         class Position {
             private int x, y = 0;
 
-            private Position findFreePosition() {
-                if (currentState.currentSliceNumber > 0) {
-                    for (int r1 = 0; r1 < pizza.R; r1++) {
-                        for (int c1 = 0; c1 < pizza.C; c1++) {
-                            if (currentState.slices[r1][c1] == UNCHECKED) {
-                                this.x = r1;
-                                this.y = c1;
-                                return this;
-                            }
+            private Position findFreePosition(int[][] slices) {
+                for (int r1 = 0; r1 < pizza.R; r1++) {
+                    for (int c1 = 0; c1 < pizza.C; c1++) {
+                        if (slices[r1][c1] == UNCHECKED) {
+                            this.x = r1;
+                            this.y = c1;
+                            return this;
                         }
                     }
                 }
                 return this;
             }
         }
-        Position p = new Position().findFreePosition();
-        for (int r = p.x; r < p.x + pizza.H; r++) {
-            for (int c = p.y; c < p.y + pizza.H; c += r + 1) {
-                if (isValid(p.x, p.y, r, c)) {
-                    markValid(p.x, p.y, r, c);
-                    return;
+        int size = currentState.size();
+        if (size == 0) {
+            boolean anyValid = false;
+            SlicesPerIteration slicesPerIteration = new SlicesPerIteration();
+            Position p = new Position().findFreePosition(slicesPerIteration.slices);
+            for (int r = p.x; r < p.x + pizza.H; r++) {
+                for (int c = p.y; c < p.y + pizza.H; c += r + 1) {
+                    if (isValid(p.x, p.y, r, c, slicesPerIteration)) {
+                        currentState.add(markValid(p.x, p.y, r, c, slicesPerIteration));
+                        slicesPerIteration = new SlicesPerIteration();
+                        anyValid = true;
+                    }
+                }
+            }
+            if (!anyValid) {
+                slicesPerIteration.slices[p.x][p.y] = DEAD_END;
+                currentState.add(slicesPerIteration);
+            }
+        } else {
+            boolean anyValid = false;
+            for (int i = 0; i < size; i++) {
+                SlicesPerIteration slicesPerIteration = currentState.get(i);
+                Position p = new Position().findFreePosition(slicesPerIteration.slices);
+                for (int r = p.x; r < p.x + pizza.H; r++) {
+                    for (int c = p.y; c < p.y + pizza.H; c += r + 1) {
+                        if (isValid(p.x, p.y, r, c, slicesPerIteration)) {
+                            currentState.set(i, markValid(p.x, p.y, r, c, slicesPerIteration));
+                            anyValid = true;
+                        }
+                    }
+                }
+                if (!anyValid) {
+                    slicesPerIteration.slices[p.x][p.y] = DEAD_END;
+                    currentState.set(i, slicesPerIteration);
                 }
             }
         }
-        currentState.slices[p.x][p.y] = DEAD_END;
     }
 
-    private void markValid(int r1, int c1, int r2, int c2) {
-        currentState.currentSliceNumber += 1;
+    private SlicesPerIteration markValid(int r1, int c1, int r2, int c2, SlicesPerIteration slicesPerIteration) {
+        slicesPerIteration.currentSliceNumber += 1;
         int s = 0;
         for (int r = r1; r < r2; r++) {
             for (int c = c1; c < c2; c++) {
                 s += 1;
-                currentState.slices[r][c] = currentState.currentSliceNumber;
+                slicesPerIteration.slices[r][c] = slicesPerIteration.currentSliceNumber;
             }
         }
-        currentState.coveredCells += s;
+        slicesPerIteration.coveredCells += s;
+        return slicesPerIteration;
     }
 
-    boolean isValid(int r1, int c1, int r2, int c2) {
+    boolean isValid(int r1, int c1, int r2, int c2, SlicesPerIteration slicesPerIteration) {
         if (r2 >= pizza.R || c2 >= pizza.C) return false;
         int l = r2 - r1 + 1;
         int h = c2 - c1 + 1;
@@ -161,7 +189,7 @@ final class PizzaSlicer {
 
         for (int r = r1; r <= r2; r++) {
             for (int c = c1; c <= c2; c++) {
-                if (currentState.slices[r][c] > 0) {
+                if (slicesPerIteration.currentSliceNumber > 0 && slicesPerIteration.slices[r][c] > 0) {
                     return false;
                 }
 

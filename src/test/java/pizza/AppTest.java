@@ -7,76 +7,80 @@ import org.junit.Test;
 import java.net.URL;
 import java.util.Optional;
 
+import static java.lang.System.out;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
 
 public class AppTest {
-  @Test
-  public void testAppHasAGreeting() {
-    App classUnderTest = new App();
-    assertNotNull("app should have a greeting", classUnderTest.getGreeting());
-  }
 
-  @Test
-  public void testFileUtils() {
-    Optional<Pizza> maybePizza =
-        Optional
-            .ofNullable(getClass().getClassLoader().getResource("example.in"))
-            .map(URL::getFile)
-            .map(FileUtils::readInput);
+    @Test
+    public void testAppHasAGreeting() {
+        App classUnderTest = new App();
+        assertNotNull("app should have a greeting", classUnderTest.getGreeting());
+    }
 
-    String result = "3 5 1 6\n" +
-        "TTTTT\n" +
-        "TMMMT\n" +
-        "TTTTT";
+    @Test
+    public void testFileUtils() {
+        Optional<Pizza> maybePizza =
+                Optional
+                        .ofNullable(getClass().getClassLoader().getResource("example.in"))
+                        .map(URL::getFile)
+                        .map(FileUtils::readInput);
 
-    assertThat(maybePizza.isPresent(), is(true));
-    maybePizza.ifPresent(pizza -> assertThat(pizza.toString(), is(result)));
-  }
+        String result = "3 5 1 6\n" +
+                "TTTTT\n" +
+                "TMMMT\n" +
+                "TTTTT";
 
-  @Test
-  public void testResultFormat() {
-    Result result =
-        new Result.Builder()
-            .withSlice(Result.Slice.create(Result.Coord.create(0, 0), Result.Coord.create(2, 1)))
-            .withSlice(Result.Slice.create(Result.Coord.create(0, 2), Result.Coord.create(2, 2)))
-            .withSlice(Result.Slice.create(Result.Coord.create(0, 3), Result.Coord.create(2, 4)))
-            .build();
+        assertThat(maybePizza.isPresent(), is(true));
+        maybePizza.ifPresent(pizza -> assertThat(pizza.toString(), is(result)));
+    }
 
-    String expected = "3\n0 0 2 1\n0 2 2 2\n0 3 2 4";
+    @Test
+    public void testResultFormat() {
+        Result result =
+                new Result.Builder()
+                        .withSlice(Result.Slice.create(Result.Coord.create(0, 0), Result.Coord.create(2, 1)))
+                        .withSlice(Result.Slice.create(Result.Coord.create(0, 2), Result.Coord.create(2, 2)))
+                        .withSlice(Result.Slice.create(Result.Coord.create(0, 3), Result.Coord.create(2, 4)))
+                        .build();
 
-    assertEquals(expected, result.toString());
-  }
+        String expected = "3\n0 0 2 1\n0 2 2 2\n0 3 2 4";
 
-  @Test
-  public void testValid() {
-    Optional<Pizza> maybePizza =
-        Optional
-            .ofNullable(getClass().getClassLoader().getResource("example.in"))
-            .map(URL::getFile)
-            .map(FileUtils::readInput);
-    maybePizza.ifPresent(pizza -> {
-      PizzaSlicer ps = PizzaSlicer.create(pizza);
-      boolean result =
-          ps.isValid(0, 0, 2, 1) &&
-              ps.isValid(0, 2, 2, 2) &&
-              ps.isValid(0, 3, 2, 4);
-      assertEquals(true, result);
-    });
-  }
+        assertEquals(expected, result.toString());
+    }
 
-  @Test
-  public void testPizzaSlicer() {
-    Optional<Pizza> maybePizza =
-        Optional
-            .ofNullable(getClass().getClassLoader().getResource("example.in"))
-            .map(URL::getFile)
-            .map(FileUtils::readInput);
+    @Test
+    public void testValid() {
+        Optional<Pizza> maybePizza =
+                Optional
+                        .ofNullable(getClass().getClassLoader().getResource("example.in"))
+                        .map(URL::getFile)
+                        .map(FileUtils::readInput);
+        maybePizza.ifPresent(pizza -> {
+            PizzaSlicer ps = PizzaSlicer.create(pizza);
+            PizzaSlicer.SlicesPerIteration slicesPerIteration = ps.new SlicesPerIteration();
+            boolean result =
+                    ps.isValid(0, 0, 2, 1, slicesPerIteration) &&
+                            ps.isValid(0, 2, 2, 2, slicesPerIteration) &&
+                            ps.isValid(0, 3, 2, 4, slicesPerIteration);
+            assertEquals(true, result);
+        });
+    }
 
-    maybePizza.ifPresent(pizza -> {
-      PizzaSlicer ps = PizzaSlicer.create(pizza);
-      ps.nextValidSlice();
-      assertEquals(1, ps.currentState.currentSliceNumber);
-    });
-  }
+    @Test
+    public void testPizzaSlicer() {
+        Optional<Pizza> maybePizza =
+                Optional
+                        .ofNullable(getClass().getClassLoader().getResource("example.in"))
+                        .map(URL::getFile)
+                        .map(FileUtils::readInput);
+
+        maybePizza.ifPresent(pizza -> {
+            PizzaSlicer ps = PizzaSlicer.create(pizza);
+            ps.nextValidSlice();
+            assertEquals(1, ps.currentState.size());
+            assertEquals(1, ps.currentState.get(0).currentSliceNumber);
+        });
+    }
 }
