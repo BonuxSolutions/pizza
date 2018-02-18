@@ -25,7 +25,7 @@ public class AppTest {
                         .ofNullable(getClass().getClassLoader().getResource("example.in"))
                         .map(URL::getFile)
                         .map(FileUtils::readFile)
-                        .map(FileUtils::parsePizza);
+                        .map(PizzaParser::parseFromArray);
 
         String result = "3 5 1 6\n" +
                 "TTTTT\n" +
@@ -57,7 +57,7 @@ public class AppTest {
                         .ofNullable(getClass().getClassLoader().getResource("example.in"))
                         .map(URL::getFile)
                         .map(FileUtils::readFile)
-                        .map(FileUtils::parsePizza);
+                        .map(PizzaParser::parseFromArray);
         maybePizza.ifPresent(pizza -> {
             PizzaSlicer ps = PizzaSlicer.create(pizza);
             PizzaSlicer.SlicesPerIteration slicesPerIteration = ps.new SlicesPerIteration();
@@ -76,7 +76,7 @@ public class AppTest {
                         .ofNullable(getClass().getClassLoader().getResource("example.in"))
                         .map(URL::getFile)
                         .map(FileUtils::readFile)
-                        .map(FileUtils::parsePizza);
+                        .map(PizzaParser::parseFromArray);
 
         maybePizza.ifPresent(pizza -> {
             PizzaSlicer ps = PizzaSlicer.create(pizza);
@@ -93,7 +93,7 @@ public class AppTest {
                         .ofNullable(getClass().getClassLoader().getResource("example.in"))
                         .map(URL::getFile)
                         .map(FileUtils::readFile)
-                        .map(FileUtils::parsePizza);
+                        .map(PizzaParser::parseFromArray);
 
         maybePizza.ifPresent(pizza -> {
             assertArrayEquals(
@@ -113,7 +113,7 @@ public class AppTest {
                         .ofNullable(getClass().getClassLoader().getResource("example2.in"))
                         .map(URL::getFile)
                         .map(FileUtils::readFile)
-                        .map(FileUtils::parsePizza);
+                        .map(PizzaParser::parseFromArray);
 
         assertThat(maybePizza.isPresent(), is(true));
         maybePizza.ifPresent(pizza -> {
