@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static pizza.Constants.T;
+import static pizza.FunctionsAndConstants.M;
 
 final class Pizza {
 
-    final int R, C, L, H;
+    final int R, C, L, H, T;
 
     final int[][] toppings;
 
@@ -18,6 +18,7 @@ final class Pizza {
         this.L = L;
         this.H = H;
         this.toppings = toppings;
+        this.T = R * C;
     }
 
     public static class Builder {
@@ -65,7 +66,7 @@ final class Pizza {
 
         for (int r = 0; r < R; r++) {
             for (int c = 0; c < C; c++) {
-                toppingsToString.append((toppings[r][c] == T) ? "T" : "M");
+                toppingsToString.append((toppings[r][c] == M) ? "M" : "T");
             }
             if (r + 1 < R) {
                 toppingsToString.append("\n");
@@ -198,5 +199,24 @@ final class PizzaSlicer {
         }
 
         return lh <= pizza.H && lh - s >= pizza.L && s >= pizza.L;
+    }
+}
+
+final class SliceBase {
+    private final int r, c;
+
+    @Override
+    public boolean equals(Object obj) {
+        SliceBase v = (SliceBase) obj;
+        return v.c == this.c && v.r == this.r;
+    }
+
+    private SliceBase(int r, int c) {
+        this.r = r;
+        this.c = c;
+    }
+
+    static SliceBase create(int r, int c) {
+        return new SliceBase(r, c);
     }
 }

@@ -7,7 +7,6 @@ import org.junit.Test;
 import java.net.URL;
 import java.util.Optional;
 
-import static java.lang.System.out;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
 
@@ -81,6 +80,25 @@ public class AppTest {
             ps.nextValidSlice();
             assertEquals(1, ps.currentState.size());
             assertEquals(1, ps.currentState.get(0).currentSliceNumber);
+        });
+    }
+
+    @Test
+    public void testGetMinToppings() {
+        Optional<Pizza> maybePizza =
+                Optional
+                        .ofNullable(getClass().getClassLoader().getResource("example.in"))
+                        .map(URL::getFile)
+                        .map(FileUtils::readInput);
+
+        maybePizza.ifPresent(pizza -> {
+            assertArrayEquals(
+                    new SliceBase[]{
+                            SliceBase.create(1, 1),
+                            SliceBase.create(1, 2),
+                            SliceBase.create(1, 3)
+                    },
+                    FunctionsAndConstants.minToppings(pizza).toArray());
         });
     }
 }
