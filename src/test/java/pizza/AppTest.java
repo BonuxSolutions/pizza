@@ -13,12 +13,6 @@ import static org.junit.Assert.*;
 public class AppTest {
 
     @Test
-    public void testAppHasAGreeting() {
-        App classUnderTest = new App();
-        assertNotNull("app should have a greeting", classUnderTest.getGreeting());
-    }
-
-    @Test
     public void testFileUtils() {
         Optional<Pizza> maybePizza =
                 Optional
@@ -60,11 +54,10 @@ public class AppTest {
                         .map(PizzaParser::parseFromArray);
         maybePizza.ifPresent(pizza -> {
             PizzaSlicer ps = PizzaSlicer.create(pizza);
-            PizzaSlicer.SlicesPerIteration slicesPerIteration = ps.new SlicesPerIteration();
             boolean result =
-                    ps.isValid(0, 0, 2, 1, slicesPerIteration) &&
-                            ps.isValid(0, 2, 2, 2, slicesPerIteration) &&
-                            ps.isValid(0, 3, 2, 4, slicesPerIteration);
+                    ps.isValid(0, 0, 2, 1) &&
+                            ps.isValid(0, 2, 2, 2) &&
+                            ps.isValid(0, 3, 2, 4);
             assertEquals(true, result);
         });
     }
@@ -80,9 +73,7 @@ public class AppTest {
 
         maybePizza.ifPresent(pizza -> {
             PizzaSlicer ps = PizzaSlicer.create(pizza);
-            ps.nextValidSlice();
-            assertEquals(1, ps.currentState.size());
-            assertEquals(1, ps.currentState.get(0).currentSliceNumber);
+            ps.slicePizza(FunctionsAndConstants.toppingBases(pizza));
         });
     }
 
@@ -102,7 +93,7 @@ public class AppTest {
                             SliceBase.create(1, 2),
                             SliceBase.create(1, 3)
                     },
-                    FunctionsAndConstants.minToppings(pizza).toArray());
+                    FunctionsAndConstants.toppingBases(pizza).toArray());
         });
     }
 
@@ -127,7 +118,7 @@ public class AppTest {
                             SliceBase.create(1, 0),
                             SliceBase.create(1, 4)
                     },
-                    FunctionsAndConstants.minToppings(pizza).toArray());
+                    FunctionsAndConstants.toppingBases(pizza).toArray());
         });
     }
 }

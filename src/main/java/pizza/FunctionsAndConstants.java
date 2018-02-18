@@ -8,8 +8,8 @@ abstract class FunctionsAndConstants {
     static int T = 0;
     static int M = 1;
 
-    static List<SliceBase> minToppings(Pizza pizza) {
-        List<SliceBase> minToppings = new ArrayList<>(pizza.C * pizza.R);
+    static List<SliceBase> toppingBases(Pizza pizza) {
+        List<SliceBase> toppingBases = new ArrayList<>(pizza.C * pizza.R);
 
         int S = 0;
         int half = (pizza.T % 2 == 0) ? pizza.T / 2 : (pizza.T / 2) + 1;
@@ -22,7 +22,7 @@ abstract class FunctionsAndConstants {
         for (int r = 0; r < pizza.R; r++)
             for (int c = 0; c < pizza.C; c++)
                 if (pizza.toppings[r][c] == min)
-                    minToppings.add(SliceBase.create(r, c));
-        return minToppings;
+                    toppingBases.add(SliceBase.create(r, c));
+        return toppingBases;
     }
 }
