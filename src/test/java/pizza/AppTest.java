@@ -73,7 +73,7 @@ public class AppTest {
 
         maybePizza.ifPresent(pizza -> {
             PizzaSlicer ps = PizzaSlicer.create(pizza);
-            ps.slicePizza(FunctionsAndConstants.toppingBases(pizza));
+            ps.slicePizza(PizzaParser.toppingBases(pizza));
         });
     }
 
@@ -93,7 +93,7 @@ public class AppTest {
                             SliceBase.create(1, 2),
                             SliceBase.create(1, 3)
                     },
-                    FunctionsAndConstants.toppingBases(pizza).toArray());
+                    PizzaParser.toppingBases(pizza).toArray());
         });
     }
 
@@ -118,7 +118,7 @@ public class AppTest {
                             SliceBase.create(1, 0),
                             SliceBase.create(1, 4)
                     },
-                    FunctionsAndConstants.toppingBases(pizza).toArray());
+                    PizzaParser.toppingBases(pizza).toArray());
         });
     }
 }
