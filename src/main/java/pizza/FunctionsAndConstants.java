@@ -16,19 +16,17 @@ abstract class FunctionsAndConstants {
         List<SliceBase> minToppings = new ArrayList<>(pizza.C * pizza.R);
 
         int S = 0;
-        int T = (pizza.T % 2 == 0) ? pizza.T / 2 : (pizza.T / 2) + 1;
+        int half = (pizza.T % 2 == 0) ? pizza.T / 2 : (pizza.T / 2) + 1;
 
         for (int r = 0; r < pizza.R; r++)
             for (int c = 0; c < pizza.C; c++) S += pizza.toppings[r][c];
 
+        int min = (pizza.R * pizza.C - S > half) ? M : T;
+
         for (int r = 0; r < pizza.R; r++)
             for (int c = 0; c < pizza.C; c++)
-                if (T > S) {
-                    if (pizza.toppings[r][c] == M)
-                        minToppings.add(SliceBase.create(r, c));
-                } else {
+                if (pizza.toppings[r][c] == min)
                     minToppings.add(SliceBase.create(r, c));
-                }
         return minToppings;
     }
 }
