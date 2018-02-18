@@ -11,18 +11,8 @@ import static pizza.FunctionsAndConstants.M;
 import static pizza.FunctionsAndConstants.T;
 
 abstract class FileUtils {
-  static Pizza readInput(String filename) {
+  static Pizza parsePizza(String[] lines) {
 
-    StringBuilder contentBuilder = new StringBuilder();
-
-    try (Stream<String> stream = Files.lines(Paths.get(filename), StandardCharsets.UTF_8)) {
-      stream.forEach(s -> contentBuilder.append(s).append("\n"));
-    } catch (IOException e) {
-      e.printStackTrace();
-      throw new RuntimeException(e);
-    }
-
-    String[] lines = contentBuilder.toString().split("\n");
     String[] firstLine = lines[0].split(" ");
 
     if (firstLine.length != 4) {
@@ -43,7 +33,7 @@ abstract class FileUtils {
 
     int[][] toppings = new int[R][C];
 
-    for (int r = 1; r < R; r++) {
+    for (int r = 1; r <= R; r++) {
       char[] line = lines[r].toCharArray();
       for (int c = 0; c < C; c++) {
         toppings[r - 1][c] = ('T' == line[c]) ? T : M;
@@ -57,5 +47,18 @@ abstract class FileUtils {
         .withTotalCells(H)
         .withToppings(toppings)
         .build();
+  }
+
+  static String[] readFile(String filename) {
+    StringBuilder contentBuilder = new StringBuilder();
+
+    try (Stream<String> stream = Files.lines(Paths.get(filename), StandardCharsets.UTF_8)) {
+      stream.forEach(s -> contentBuilder.append(s).append("\n"));
+    } catch (IOException e) {
+      e.printStackTrace();
+      throw new RuntimeException(e);
+    }
+
+    return contentBuilder.toString().split("\n");
   }
 }

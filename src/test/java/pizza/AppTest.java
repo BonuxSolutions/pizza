@@ -24,7 +24,8 @@ public class AppTest {
                 Optional
                         .ofNullable(getClass().getClassLoader().getResource("example.in"))
                         .map(URL::getFile)
-                        .map(FileUtils::readInput);
+                        .map(FileUtils::readFile)
+                        .map(FileUtils::parsePizza);
 
         String result = "3 5 1 6\n" +
                 "TTTTT\n" +
@@ -55,7 +56,8 @@ public class AppTest {
                 Optional
                         .ofNullable(getClass().getClassLoader().getResource("example.in"))
                         .map(URL::getFile)
-                        .map(FileUtils::readInput);
+                        .map(FileUtils::readFile)
+                        .map(FileUtils::parsePizza);
         maybePizza.ifPresent(pizza -> {
             PizzaSlicer ps = PizzaSlicer.create(pizza);
             PizzaSlicer.SlicesPerIteration slicesPerIteration = ps.new SlicesPerIteration();
@@ -73,7 +75,8 @@ public class AppTest {
                 Optional
                         .ofNullable(getClass().getClassLoader().getResource("example.in"))
                         .map(URL::getFile)
-                        .map(FileUtils::readInput);
+                        .map(FileUtils::readFile)
+                        .map(FileUtils::parsePizza);
 
         maybePizza.ifPresent(pizza -> {
             PizzaSlicer ps = PizzaSlicer.create(pizza);
@@ -89,7 +92,8 @@ public class AppTest {
                 Optional
                         .ofNullable(getClass().getClassLoader().getResource("example.in"))
                         .map(URL::getFile)
-                        .map(FileUtils::readInput);
+                        .map(FileUtils::readFile)
+                        .map(FileUtils::parsePizza);
 
         maybePizza.ifPresent(pizza -> {
             assertArrayEquals(
@@ -108,8 +112,10 @@ public class AppTest {
                 Optional
                         .ofNullable(getClass().getClassLoader().getResource("example2.in"))
                         .map(URL::getFile)
-                        .map(FileUtils::readInput);
+                        .map(FileUtils::readFile)
+                        .map(FileUtils::parsePizza);
 
+        assertThat(maybePizza.isPresent(), is(true));
         maybePizza.ifPresent(pizza -> {
             assertArrayEquals(
                     new SliceBase[]{
