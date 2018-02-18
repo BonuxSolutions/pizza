@@ -101,4 +101,27 @@ public class AppTest {
                     FunctionsAndConstants.minToppings(pizza).toArray());
         });
     }
+
+    @Test
+    public void testGetMinToppings2() {
+        Optional<Pizza> maybePizza =
+                Optional
+                        .ofNullable(getClass().getClassLoader().getResource("example2.in"))
+                        .map(URL::getFile)
+                        .map(FileUtils::readInput);
+
+        maybePizza.ifPresent(pizza -> {
+            assertArrayEquals(
+                    new SliceBase[]{
+                            SliceBase.create(0, 0),
+                            SliceBase.create(0, 1),
+                            SliceBase.create(0, 2),
+                            SliceBase.create(0, 3),
+                            SliceBase.create(0, 4),
+                            SliceBase.create(1, 0),
+                            SliceBase.create(1, 4)
+                    },
+                    FunctionsAndConstants.minToppings(pizza).toArray());
+        });
+    }
 }

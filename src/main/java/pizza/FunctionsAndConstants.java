@@ -2,15 +2,11 @@ package pizza;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Function;
 
 abstract class FunctionsAndConstants {
 
     static int T = 0;
     static int M = 1;
-
-    private static double s2 = Math.sqrt(2.);
-    static Function<Integer, Integer> sqrt2 = (mult) -> (int) Math.round(mult * s2);
 
     static List<SliceBase> minToppings(Pizza pizza) {
         List<SliceBase> minToppings = new ArrayList<>(pizza.C * pizza.R);
