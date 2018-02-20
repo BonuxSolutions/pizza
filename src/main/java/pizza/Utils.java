@@ -4,9 +4,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Stream;
 
 import static pizza.FunctionsAndConstants.M;
@@ -28,6 +26,59 @@ abstract class FileUtils {
 }
 
 abstract class PizzaParser {
+    static class SliceOffset {
+        final int r, c;
+
+        private SliceOffset(int r, int c) {
+            this.r = r;
+            this.c = c;
+        }
+
+        static SliceOffset create(int r, int c) {
+            return new SliceOffset(r, c);
+        }
+
+        @Override
+        public String toString() {
+            return "(" + r + "," + c + ")";
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            SliceOffset that = (SliceOffset) o;
+
+            if (r != that.r) return false;
+            return c == that.c;
+        }
+
+        @Override
+        public int hashCode() {
+            int result = r;
+            result = 31 * result + c;
+            return result;
+        }
+    }
+
+    static Set<SliceOffset> possibleSlices(int H) {
+        Set<SliceOffset> result = new HashSet<>(H);
+
+        for (Integer i : FunctionsAndConstants.divisors(H)) {
+            for (int r = 0; r < H / i; r++) {
+                for (int c = 0; c < H / i; c++) {
+                    if ((r != 0 || c != 0) && ((r + 1) * (c + 1) <= H)) {
+                        SliceOffset sliceOffset = SliceOffset.create(r, c);
+                        result.add(sliceOffset);
+                    }
+                }
+            }
+        }
+
+        return result;
+    }
+
     static Pizza parseFromArray(String[] lines) {
 
         String[] firstLine = lines[0].split(" ");

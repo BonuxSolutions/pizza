@@ -2,9 +2,11 @@ package pizza;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 import static pizza.FunctionsAndConstants.M;
+import static pizza.PizzaParser.SliceOffset;
 
 final class Pizza {
 
@@ -84,55 +86,35 @@ final class Pizza {
 final class PizzaSlicer {
     final private Pizza pizza;
 
-    List<SlicesPerBase> currentState;
-
     private PizzaSlicer(Pizza pizza) {
         this.pizza = pizza;
-        currentState = new ArrayList<>(pizza.C * pizza.R);
     }
 
     static PizzaSlicer create(Pizza pizza) {
         return new PizzaSlicer(pizza);
     }
 
-    void slicePizza(final List<SliceBase> sliceBases) {
+    private SlicesPerBase newSlicesPerBase() {
+        return SlicesPerBase.create(pizza.R, pizza.C);
+    }
+
+    List<SlicesPerBase> slicePizza(final Collection<SliceBase> sliceBases, final Collection<SliceOffset> sliceOffsets) {
+        List<SlicesPerBase> currentState = new ArrayList<>(pizza.C * pizza.R);
         for (SliceBase sliceBase : sliceBases) {
-            final SlicesPerBase slicesPerBase = SlicesPerBase.create(pizza.R, pizza.C);
-            slicesPerBase.addSlices(forVertical(sliceBase));
-            slicesPerBase.addSlices(forHorizontal(sliceBase));
+            final SlicesPerBase slicesPerBase = newSlicesPerBase();
+            for (SliceOffset sliceOffset : sliceOffsets) {
+                for (int r = sliceBase.r - sliceOffset.r; r < sliceBase.r; r++) {
+                    for (int c = sliceBase.c - sliceOffset.c; c < sliceBase.c; c++) {
+                        if (isValid(r, c, sliceBase.r + sliceOffset.r, sliceBase.c + sliceOffset.c)) {
+                            slicesPerBase.addSlice(markValid(r, c, sliceBase.r + sliceOffset.r, sliceBase.c + sliceOffset.c));
+                        }
+                    }
+                }
+            }
 
             currentState.add(slicesPerBase);
         }
-    }
-
-    private List<Slice> forVertical(final SliceBase sliceBase) {
-        final List<Slice> slices = new ArrayList<>();
-        for (int r = sliceBase.r - pizza.H; r < sliceBase.r; r++) {
-            if (isValid((r < 0) ? 0 : r, sliceBase.c, sliceBase.r, sliceBase.c)) {
-                slices.add(markValid((r < 0) ? 0 : r, sliceBase.c, sliceBase.r, sliceBase.c));
-            }
-        }
-        for (int r = sliceBase.r; r < sliceBase.r + pizza.H; r++) {
-            if (isValid(sliceBase.r, sliceBase.c, (r >= pizza.R) ? pizza.R - 1 : r, sliceBase.c)) {
-                slices.add(markValid(sliceBase.r, sliceBase.c, (r >= pizza.R) ? pizza.R - 1 : r, sliceBase.c));
-            }
-        }
-        return slices;
-    }
-
-    private List<Slice> forHorizontal(final SliceBase sliceBase) {
-        final List<Slice> slices = new ArrayList<>();
-        for (int c = sliceBase.c - pizza.H; c < sliceBase.c; c++) {
-            if (isValid(sliceBase.r, (c < 0) ? 0 : c, sliceBase.r, sliceBase.c)) {
-                slices.add(markValid(sliceBase.r, (c < 0) ? 0 : c, sliceBase.r, sliceBase.c));
-            }
-        }
-        for (int c = sliceBase.c; c < sliceBase.c + pizza.H; c++) {
-            if (isValid(sliceBase.r, sliceBase.c, sliceBase.r, (c >= pizza.C) ? pizza.C - 1 : c)) {
-                slices.add(markValid(sliceBase.r, sliceBase.c, sliceBase.r, (c >= pizza.C) ? pizza.C - 1 : c));
-            }
-        }
-        return slices;
+        return currentState;
     }
 
     private Slice markValid(int r1, int c1, int r2, int c2) {
@@ -143,6 +125,7 @@ final class PizzaSlicer {
     }
 
     boolean isValid(int r1, int c1, int r2, int c2) {
+        if (r1 < 0 || c1 < 0 || r2 >= pizza.R || c2 >= pizza.C) return false;
         int l = r2 - r1 + 1;
         int h = c2 - c1 + 1;
         int lh = l * h;

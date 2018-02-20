@@ -5,10 +5,13 @@ package pizza;/*
 import org.junit.Test;
 
 import java.net.URL;
+import java.util.List;
 import java.util.Optional;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
+import static pizza.PizzaParser.possibleSlices;
+import static pizza.PizzaParser.toppingBases;
 
 public class AppTest {
 
@@ -73,7 +76,8 @@ public class AppTest {
 
         maybePizza.ifPresent(pizza -> {
             PizzaSlicer ps = PizzaSlicer.create(pizza);
-            ps.slicePizza(PizzaParser.toppingBases(pizza));
+            List<SlicesPerBase> slicesPerBase = ps.slicePizza(toppingBases(pizza), possibleSlices(pizza.H));
+            assertEquals(3, slicesPerBase.size());
         });
     }
 
