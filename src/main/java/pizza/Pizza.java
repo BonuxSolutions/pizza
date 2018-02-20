@@ -103,10 +103,10 @@ final class PizzaSlicer {
         for (SliceBase sliceBase : sliceBases) {
             final SlicesPerBase slicesPerBase = newSlicesPerBase();
             for (SliceOffset sliceOffset : sliceOffsets) {
-                for (int r = sliceBase.r - sliceOffset.r; r < sliceBase.r; r++) {
-                    for (int c = sliceBase.c - sliceOffset.c; c < sliceBase.c; c++) {
-                        if (isValid(r, c, sliceBase.r + sliceOffset.r, sliceBase.c + sliceOffset.c)) {
-                            slicesPerBase.addSlice(markValid(r, c, sliceBase.r + sliceOffset.r, sliceBase.c + sliceOffset.c));
+                for (int r = sliceBase.r - sliceOffset.r; r <= sliceBase.r; r++) {
+                    for (int c = sliceBase.c - sliceOffset.c; c <= sliceBase.c; c++) {
+                        if (isValid(r, c, r + sliceOffset.r, c + sliceOffset.c)) {
+                            slicesPerBase.addSlice(markValid(r, c, r + sliceOffset.r, c + sliceOffset.c));
                         }
                     }
                 }

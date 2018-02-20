@@ -5,8 +5,11 @@ package pizza;/*
 import org.junit.Test;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
@@ -75,9 +78,29 @@ public class AppTest {
                         .map(PizzaParser::parseFromArray);
 
         maybePizza.ifPresent(pizza -> {
+            List<Slice> legalSlices = new ArrayList<>();
+            Slice slice1 = new Slice.Builder()
+                    .withUpperLeft(0, 0)
+                    .withLowerRight(2, 1)
+                    .build();
+            Slice slice2 = new Slice.Builder()
+                    .withUpperLeft(0, 2)
+                    .withLowerRight(2, 2)
+                    .build();
+            Slice slice3 = new Slice.Builder()
+                    .withUpperLeft(0, 3)
+                    .withLowerRight(2, 4)
+                    .build();
+
+            legalSlices.add(slice1);
+            legalSlices.add(slice2);
+            legalSlices.add(slice3);
+
             PizzaSlicer ps = PizzaSlicer.create(pizza);
             List<SlicesPerBase> slicesPerBase = ps.slicePizza(toppingBases(pizza), possibleSlices(pizza.H));
             assertEquals(3, slicesPerBase.size());
+            Set<Slice> combined = slicesPerBase.stream().flatMap(s -> s.slices.stream()).collect(Collectors.toSet());
+            assertTrue(combined.containsAll(legalSlices));
         });
     }
 
