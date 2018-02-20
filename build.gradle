@@ -5,7 +5,18 @@
  * For more details take a look at the Java Quickstart chapter in the Gradle
  * user guide available at https://docs.gradle.org/4.2.1/userguide/tutorial_java_projects.html
  */
+buildscript {
+  repositories {
+    maven {
+      url "https://plugins.gradle.org/m2/"
+    }
+  }
+  dependencies {
+    classpath "gradle.plugin.net.java.openjdk.shinyafox:jshell-gradle-plugin:1.0.4"
+  }
+}
 
+apply plugin: "net.java.openjdk.shinyafox.jshell.gradle.plugin"
 // Apply the java plugin to add support for Java
 apply plugin: 'java'
 
