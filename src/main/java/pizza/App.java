@@ -1,11 +1,11 @@
 package pizza;
 
-public class App {
-  public String getGreeting() {
-    return "Hello world.";
-  }
+import static java.lang.System.out;
 
-  public static void main(String[] args) {
-    System.out.println(new App().getGreeting());
-  }
+public class App {
+
+    public static void main(String[] args) {
+        PizzaParser.possibleSlices(6)
+                .forEach(out::println);
+    }
 }

@@ -5,19 +5,18 @@ package pizza;/*
 import org.junit.Test;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
-import static java.lang.System.out;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
+import static pizza.PizzaParser.possibleSlices;
+import static pizza.PizzaParser.toppingBases;
 
 public class AppTest {
-
-    @Test
-    public void testAppHasAGreeting() {
-        App classUnderTest = new App();
-        assertNotNull("app should have a greeting", classUnderTest.getGreeting());
-    }
 
     @Test
     public void testFileUtils() {
@@ -25,7 +24,8 @@ public class AppTest {
                 Optional
                         .ofNullable(getClass().getClassLoader().getResource("example.in"))
                         .map(URL::getFile)
-                        .map(FileUtils::readInput);
+                        .map(FileUtils::readFile)
+                        .map(PizzaParser::parseFromArray);
 
         String result = "3 5 1 6\n" +
                 "TTTTT\n" +
@@ -56,14 +56,14 @@ public class AppTest {
                 Optional
                         .ofNullable(getClass().getClassLoader().getResource("example.in"))
                         .map(URL::getFile)
-                        .map(FileUtils::readInput);
+                        .map(FileUtils::readFile)
+                        .map(PizzaParser::parseFromArray);
         maybePizza.ifPresent(pizza -> {
             PizzaSlicer ps = PizzaSlicer.create(pizza);
-            PizzaSlicer.SlicesPerIteration slicesPerIteration = ps.new SlicesPerIteration();
             boolean result =
-                    ps.isValid(0, 0, 2, 1, slicesPerIteration) &&
-                            ps.isValid(0, 2, 2, 2, slicesPerIteration) &&
-                            ps.isValid(0, 3, 2, 4, slicesPerIteration);
+                    ps.isValid(0, 0, 2, 1) &&
+                            ps.isValid(0, 2, 2, 2) &&
+                            ps.isValid(0, 3, 2, 4);
             assertEquals(true, result);
         });
     }
@@ -74,13 +74,79 @@ public class AppTest {
                 Optional
                         .ofNullable(getClass().getClassLoader().getResource("example.in"))
                         .map(URL::getFile)
-                        .map(FileUtils::readInput);
+                        .map(FileUtils::readFile)
+                        .map(PizzaParser::parseFromArray);
 
         maybePizza.ifPresent(pizza -> {
+            List<Slice> legalSlices = new ArrayList<>();
+            Slice slice1 = new Slice.Builder()
+                    .withUpperLeft(0, 0)
+                    .withLowerRight(2, 1)
+                    .build();
+            Slice slice2 = new Slice.Builder()
+                    .withUpperLeft(0, 2)
+                    .withLowerRight(2, 2)
+                    .build();
+            Slice slice3 = new Slice.Builder()
+                    .withUpperLeft(0, 3)
+                    .withLowerRight(2, 4)
+                    .build();
+
+            legalSlices.add(slice1);
+            legalSlices.add(slice2);
+            legalSlices.add(slice3);
+
             PizzaSlicer ps = PizzaSlicer.create(pizza);
-            ps.nextValidSlice();
-            assertEquals(1, ps.currentState.size());
-            assertEquals(1, ps.currentState.get(0).currentSliceNumber);
+            List<SlicesPerBase> slicesPerBase = ps.slicePizza(toppingBases(pizza), possibleSlices(pizza.H));
+            Set<Slice> combined = slicesPerBase.stream().flatMap(s -> s.slices.stream()).collect(Collectors.toSet());
+
+            assertTrue(combined.containsAll(legalSlices));
+            assertEquals(3, slicesPerBase.size());
+        });
+    }
+
+    @Test
+    public void testGetMinToppings() {
+        Optional<Pizza> maybePizza =
+                Optional
+                        .ofNullable(getClass().getClassLoader().getResource("example.in"))
+                        .map(URL::getFile)
+                        .map(FileUtils::readFile)
+                        .map(PizzaParser::parseFromArray);
+
+        maybePizza.ifPresent(pizza -> {
+            assertArrayEquals(
+                    new SliceBase[]{
+                            SliceBase.create(1, 1),
+                            SliceBase.create(1, 2),
+                            SliceBase.create(1, 3)
+                    },
+                    PizzaParser.toppingBases(pizza).toArray());
+        });
+    }
+
+    @Test
+    public void testGetMinToppings2() {
+        Optional<Pizza> maybePizza =
+                Optional
+                        .ofNullable(getClass().getClassLoader().getResource("example2.in"))
+                        .map(URL::getFile)
+                        .map(FileUtils::readFile)
+                        .map(PizzaParser::parseFromArray);
+
+        assertThat(maybePizza.isPresent(), is(true));
+        maybePizza.ifPresent(pizza -> {
+            assertArrayEquals(
+                    new SliceBase[]{
+                            SliceBase.create(0, 0),
+                            SliceBase.create(0, 1),
+                            SliceBase.create(0, 2),
+                            SliceBase.create(0, 3),
+                            SliceBase.create(0, 4),
+                            SliceBase.create(1, 0),
+                            SliceBase.create(1, 4)
+                    },
+                    PizzaParser.toppingBases(pizza).toArray());
         });
     }
 }
