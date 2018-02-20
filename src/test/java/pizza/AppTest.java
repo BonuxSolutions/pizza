@@ -98,9 +98,10 @@ public class AppTest {
 
             PizzaSlicer ps = PizzaSlicer.create(pizza);
             List<SlicesPerBase> slicesPerBase = ps.slicePizza(toppingBases(pizza), possibleSlices(pizza.H));
-            assertEquals(3, slicesPerBase.size());
             Set<Slice> combined = slicesPerBase.stream().flatMap(s -> s.slices.stream()).collect(Collectors.toSet());
+
             assertTrue(combined.containsAll(legalSlices));
+            assertEquals(3, slicesPerBase.size());
         });
     }
 
