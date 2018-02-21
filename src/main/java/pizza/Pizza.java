@@ -120,13 +120,13 @@ final class PizzaSlicer {
             Set<Slice> newSliceSet = new HashSet<>();
             newSliceSet.add(s1);
             for (Slice s2 : slices) {
-                if (!s1.intersects(s2)) {
-                    for (Slice s3 : new HashSet<>(newSliceSet)) {
-                        if (!s2.intersects(s3)) {
-                            newSliceSet.add(s2);
-                        }
+                boolean add = true;
+                for (Slice s3 : new HashSet<>(newSliceSet)) {
+                    if (s2.intersects(s3)) {
+                        add = false;
                     }
                 }
+                if (add) newSliceSet.add(s2);
             }
             int currentAreaCovered = slicesWithMaxAreaCovered.stream().map(k -> k.area).reduce(0, addition);
             int newAreaCovered = newSliceSet.stream().map(k -> k.area).reduce(0, addition);
