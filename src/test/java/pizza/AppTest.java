@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
@@ -72,7 +71,7 @@ public class AppTest {
     public void testPizzaSlicer() {
         Optional<Pizza> maybePizza =
                 Optional
-                        .ofNullable(getClass().getClassLoader().getResource("example.in"))
+                        .ofNullable(getClass().getClassLoader().getResource("big.in"))
                         .map(URL::getFile)
                         .map(FileUtils::readFile)
                         .map(PizzaParser::parseFromArray);
@@ -97,11 +96,9 @@ public class AppTest {
             legalSlices.add(slice3);
 
             PizzaSlicer ps = PizzaSlicer.create(pizza);
-            List<SlicesPerBase> slicesPerBase = ps.slicePizza(toppingBases(pizza), possibleSlices(pizza.H));
-            Set<Slice> combined = slicesPerBase.stream().flatMap(s -> s.slices.stream()).collect(Collectors.toSet());
+            Set<Slice> slices = ps.slicePizza(toppingBases(pizza), possibleSlices(pizza.H));
 
-            assertTrue(combined.containsAll(legalSlices));
-            assertEquals(3, slicesPerBase.size());
+            assertTrue(slices.containsAll(legalSlices));
         });
     }
 

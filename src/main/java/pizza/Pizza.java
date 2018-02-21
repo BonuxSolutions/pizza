@@ -1,9 +1,6 @@
 package pizza;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 import static pizza.FunctionsAndConstants.M;
 import static pizza.PizzaParser.SliceOffset;
@@ -94,25 +91,18 @@ final class PizzaSlicer {
         return new PizzaSlicer(pizza);
     }
 
-    private SlicesPerBase newSlicesPerBase() {
-        return SlicesPerBase.create(pizza.R, pizza.C);
-    }
-
-    List<SlicesPerBase> slicePizza(final Collection<SliceBase> sliceBases, final Collection<SliceOffset> sliceOffsets) {
-        List<SlicesPerBase> currentState = new ArrayList<>(pizza.C * pizza.R);
+    Set<Slice> slicePizza(final Collection<SliceBase> sliceBases, final Collection<SliceOffset> sliceOffsets) {
+        Set<Slice> currentState = new HashSet<>(pizza.C * pizza.R);
         for (SliceBase sliceBase : sliceBases) {
-            final SlicesPerBase slicesPerBase = newSlicesPerBase();
             for (SliceOffset sliceOffset : sliceOffsets) {
                 for (int r = sliceBase.r - sliceOffset.r; r <= sliceBase.r; r++) {
                     for (int c = sliceBase.c - sliceOffset.c; c <= sliceBase.c; c++) {
                         if (isValid(r, c, r + sliceOffset.r, c + sliceOffset.c)) {
-                            slicesPerBase.addSlice(markValid(r, c, r + sliceOffset.r, c + sliceOffset.c));
+                            currentState.add(markValid(r, c, r + sliceOffset.r, c + sliceOffset.c));
                         }
                     }
                 }
             }
-
-            currentState.add(slicesPerBase);
         }
         return currentState;
     }

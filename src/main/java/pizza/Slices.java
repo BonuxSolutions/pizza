@@ -1,6 +1,6 @@
 package pizza;
 
-import java.util.*;
+import java.util.Objects;
 
 final class Slice {
     final int r1, c1, r2, c2;
@@ -74,21 +74,5 @@ final class SliceBase {
 
     static SliceBase create(int r, int c) {
         return new SliceBase(r, c);
-    }
-}
-
-final class SlicesPerBase {
-    final List<Slice> slices;
-
-    void addSlice(final Slice slice) {
-        this.slices.add(slice);
-    }
-
-    private SlicesPerBase(int r, int c) {
-        slices = new ArrayList<>(c * r);
-    }
-
-    static SlicesPerBase create(int r, int c) {
-        return new SlicesPerBase(r, c);
     }
 }
