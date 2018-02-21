@@ -207,7 +207,7 @@ public class AppTest {
 
         assertTrue(!slice8.intersects(slice9) &&
                 !slice8.intersects(slice10) &&
-                slice9.intersects(slice10));
+                !slice9.intersects(slice10));
 
 
     }
