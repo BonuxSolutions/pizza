@@ -96,11 +96,9 @@ public class AppTest {
 
             PizzaSlicer ps = PizzaSlicer.create(pizza);
             Set<Slice> slices = ps.slicePizza(toppingBases(pizza), possibleSlices(pizza.H));
-
-            assertTrue(slices.containsAll(legalSlices));
-
             Set<Slice> maxArea = ps.withMaxArea(legalSlices);
 
+            assertTrue(slices.containsAll(legalSlices));
             assertEquals(legalSlices, maxArea);
         });
     }
