@@ -2,6 +2,9 @@ package pizza;
 
 import java.util.Objects;
 
+import static java.lang.Math.max;
+import static java.lang.Math.min;
+
 final class Slice {
     final int r1, c1, r2, c2, area;
 
@@ -14,16 +17,12 @@ final class Slice {
     }
 
     boolean intersects(Slice other) {
-        int tw = r2 - r1 + 1;
-        int th = c2 - c1 + 1;
-        int rw = other.r2 - other.r1 + 1;
-        int rh = other.c2 - other.c1 + 1;
+        int dr1 = max(r1, other.r1);
+        int dr2 = min(r2, other.r2);
+        int dc1 = max(c1, other.c1);
+        int dc2 = min(c2, other.c2);
 
-        return ((other.r2 <= other.r1 || other.r2 >= r1) &&
-                (other.c2 <= other.c1 || other.c2 >= c1) &&
-                (r2 <= r1 || r2 >= other.r1) &&
-                (c2 <= c1 || c2 >= other.c1)) &&
-                !(rw <= 0 || rh <= 0 || tw <= 0 || th <= 0);
+        return (dr2 >= dr1) && (dc2 >= dc1);
     }
 
     @Override
