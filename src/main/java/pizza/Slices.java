@@ -3,13 +3,27 @@ package pizza;
 import java.util.Objects;
 
 final class Slice {
-    final int r1, c1, r2, c2;
+    final int r1, c1, r2, c2, area;
 
     private Slice(int r1, int c1, int r2, int c2) {
         this.r1 = r1;
         this.c1 = c1;
         this.r2 = r2;
         this.c2 = c2;
+        this.area = (r2 - r1 + 1) * (c2 - c1 + 1);
+    }
+
+    boolean intersects(Slice other) {
+        int tw = r2 - r1 + 1;
+        int th = c2 - c1 + 1;
+        int rw = other.r2 - other.r1 + 1;
+        int rh = other.c2 - other.c1 + 1;
+
+        return ((other.r2 <= other.r1 || other.r2 >= r1) &&
+                (other.c2 <= other.c1 || other.c2 >= c1) &&
+                (r2 <= r1 || r2 >= other.r1) &&
+                (c2 <= c1 || c2 >= other.c1)) &&
+                !(rw <= 0 || rh <= 0 || tw <= 0 || th <= 0);
     }
 
     @Override

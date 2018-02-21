@@ -1,6 +1,10 @@
 package pizza;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.function.BinaryOperator;
 
 import static pizza.FunctionsAndConstants.M;
 import static pizza.PizzaParser.SliceOffset;
@@ -105,6 +109,33 @@ final class PizzaSlicer {
             }
         }
         return currentState;
+    }
+
+    private BinaryOperator<Integer> addition = (i1, i2) -> i1 + i2;
+
+    Set<Slice> withMaxArea(Set<Slice> slices) {
+        Set<Slice> slicesWithMaxAreaCovered = new HashSet<>();
+
+        for (Slice s1 : slices) {
+            Set<Slice> newSliceSet = new HashSet<>();
+            newSliceSet.add(s1);
+            for (Slice s2 : slices) {
+                if (!s1.intersects(s2)) {
+                    for (Slice s3 : new HashSet<>(newSliceSet)) {
+                        if (!s2.intersects(s3)) {
+                            newSliceSet.add(s2);
+                        }
+                    }
+                }
+            }
+            int currentAreaCovered = slicesWithMaxAreaCovered.stream().map(k -> k.area).reduce(0, addition);
+            int newAreaCovered = newSliceSet.stream().map(k -> k.area).reduce(0, addition);
+            if (newAreaCovered > currentAreaCovered) {
+                slicesWithMaxAreaCovered = newSliceSet;
+            }
+        }
+
+        return slicesWithMaxAreaCovered;
     }
 
     private Slice markValid(int r1, int c1, int r2, int c2) {

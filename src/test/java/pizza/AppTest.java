@@ -5,8 +5,7 @@ package pizza;/*
 import org.junit.Test;
 
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
@@ -71,13 +70,13 @@ public class AppTest {
     public void testPizzaSlicer() {
         Optional<Pizza> maybePizza =
                 Optional
-                        .ofNullable(getClass().getClassLoader().getResource("big.in"))
+                        .ofNullable(getClass().getClassLoader().getResource("example.in"))
                         .map(URL::getFile)
                         .map(FileUtils::readFile)
                         .map(PizzaParser::parseFromArray);
 
         maybePizza.ifPresent(pizza -> {
-            List<Slice> legalSlices = new ArrayList<>();
+            Set<Slice> legalSlices = new HashSet<>();
             Slice slice1 = new Slice.Builder()
                     .withUpperLeft(0, 0)
                     .withLowerRight(2, 1)
@@ -99,6 +98,10 @@ public class AppTest {
             Set<Slice> slices = ps.slicePizza(toppingBases(pizza), possibleSlices(pizza.H));
 
             assertTrue(slices.containsAll(legalSlices));
+
+            Set<Slice> maxArea = ps.withMaxArea(slices);
+
+            assertEquals(legalSlices, maxArea);
         });
     }
 
@@ -145,5 +148,48 @@ public class AppTest {
                     },
                     PizzaParser.toppingBases(pizza).toArray());
         });
+    }
+
+    @Test
+    public void testIntersections() {
+        Slice slice1 = new Slice.Builder()
+                .withUpperLeft(1, 1)
+                .withLowerRight(3, 4)
+                .build();
+
+        Slice slice2 = new Slice.Builder()
+                .withUpperLeft(1, 1)
+                .withLowerRight(3, 4)
+                .build();
+        assertTrue(slice1.intersects(slice2));
+
+        Slice slice3 = new Slice.Builder()
+                .withUpperLeft(2, 1)
+                .withLowerRight(4, 3)
+                .build();
+        assertTrue(slice1.intersects(slice3));
+
+        Slice slice4 = new Slice.Builder()
+                .withUpperLeft(3, 1)
+                .withLowerRight(5, 4)
+                .build();
+
+        assertTrue(slice1.intersects(slice4));
+
+        Slice slice5 = new Slice.Builder()
+                .withUpperLeft(0, 0)
+                .withLowerRight(3, 4)
+                .build();
+        assertTrue(slice1.intersects(slice5));
+
+        Slice slice6 = new Slice.Builder()
+                .withUpperLeft(1, 3)
+                .withLowerRight(1, 4)
+                .build();
+        Slice slice7 = new Slice.Builder()
+                .withUpperLeft(0, 2)
+                .withLowerRight(2, 3)
+                .build();
+        assertTrue(slice6.intersects(slice7));
     }
 }
