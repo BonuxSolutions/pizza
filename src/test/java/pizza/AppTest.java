@@ -99,7 +99,7 @@ public class AppTest {
 
             assertTrue(slices.containsAll(legalSlices));
 
-            Set<Slice> maxArea = ps.withMaxArea(slices);
+            Set<Slice> maxArea = ps.withMaxArea(legalSlices);
 
             assertEquals(legalSlices, maxArea);
         });
@@ -191,5 +191,24 @@ public class AppTest {
                 .withLowerRight(2, 3)
                 .build();
         assertTrue(slice6.intersects(slice7));
+
+        Slice slice8 = new Slice.Builder()
+                .withUpperLeft(0, 3)
+                .withLowerRight(2, 4)
+                .build();
+        Slice slice9 = new Slice.Builder()
+                .withUpperLeft(0, 2)
+                .withLowerRight(2, 2)
+                .build();
+        Slice slice10 = new Slice.Builder()
+                .withUpperLeft(0, 0)
+                .withLowerRight(2, 1)
+                .build();
+
+        assertTrue(!slice8.intersects(slice9) &&
+                !slice8.intersects(slice10) &&
+                slice9.intersects(slice10));
+
+
     }
 }
