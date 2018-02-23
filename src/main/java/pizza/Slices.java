@@ -1,5 +1,6 @@
 package pizza;
 
+import java.util.Comparator;
 import java.util.Objects;
 
 import static java.lang.Math.max;
@@ -64,6 +65,15 @@ final class Slice {
     @Override
     public String toString() {
         return r1 + " " + c1 + " " + r2 + " " + c2;
+    }
+
+    static Comparator<Slice> comparator() {
+        return (Slice o1, Slice o2) -> {
+            if (o1.r1 == o2.r1 && o1.c1 == o2.c1) return 0;
+            else if (o1.r1 < o2.r1) return -1;
+            else if (o1.c1 < o2.c1) return -1;
+            else return 1;
+        };
     }
 }
 

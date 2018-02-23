@@ -1,10 +1,8 @@
 package pizza;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 import java.util.function.BinaryOperator;
+import java.util.stream.Collectors;
 
 import static pizza.FunctionsAndConstants.M;
 import static pizza.PizzaParser.SliceOffset;
@@ -114,12 +112,15 @@ final class PizzaSlicer {
     private BinaryOperator<Integer> addition = (i1, i2) -> i1 + i2;
 
     Set<Slice> withMaxArea(Set<Slice> slices) {
+        List<Slice> oslices = new ArrayList<>(slices);
+        oslices.sort(Slice.comparator());
+
         Set<Slice> slicesWithMaxAreaCovered = new HashSet<>();
 
-        for (Slice s1 : slices) {
+        for (Slice s1 : oslices) {
             Set<Slice> newSliceSet = new HashSet<>();
             newSliceSet.add(s1);
-            for (Slice s2 : slices) {
+            for (Slice s2 : oslices.stream().filter(s -> !s.equals(s1)).collect(Collectors.toSet())) {
                 boolean add = true;
                 for (Slice s3 : new HashSet<>(newSliceSet)) {
                     if (s2.intersects(s3)) {

@@ -15,7 +15,7 @@ abstract class FileUtils {
         StringBuilder contentBuilder = new StringBuilder();
 
         // /C:/paths/file.txt <-- cutting first / of for Windows
-        if (System.getProperty( "os.name" ).contains("Windows")) filename = filename.substring(1);
+        if (System.getProperty("os.name").contains("Windows")) filename = filename.substring(1);
 
         try (Stream<String> stream = Files.lines(Paths.get(filename), StandardCharsets.UTF_8)) {
             stream.forEach(s -> contentBuilder.append(s).append("\n"));
