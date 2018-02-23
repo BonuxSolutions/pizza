@@ -37,10 +37,10 @@ public class AppTest {
     @Test
     public void testResultFormat() {
         Result result =
-                new Result.Builder()
-                        .withSlice(Result.Slice.create(Result.Coord.create(0, 0), Result.Coord.create(2, 1)))
-                        .withSlice(Result.Slice.create(Result.Coord.create(0, 2), Result.Coord.create(2, 2)))
-                        .withSlice(Result.Slice.create(Result.Coord.create(0, 3), Result.Coord.create(2, 4)))
+                new Result.Builder(3)
+                        .withSlice(new Slice.Builder().withUpperLeft(0, 0).withLowerRight(2, 1).build())
+                        .withSlice(new Slice.Builder().withUpperLeft(0, 2).withLowerRight(2, 2).build())
+                        .withSlice(new Slice.Builder().withUpperLeft(0, 3).withLowerRight(2, 4).build())
                         .build();
 
         String expected = "3\n0 0 2 1\n0 2 2 2\n0 3 2 4";

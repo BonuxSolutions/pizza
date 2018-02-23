@@ -63,7 +63,7 @@ final class Slice {
 
     @Override
     public String toString() {
-        return "(" + r1 + "," + c1 + ") (" + r2 + "," + c2 + ")";
+        return r1 + " " + c1 + " " + r2 + " " + c2;
     }
 }
 
