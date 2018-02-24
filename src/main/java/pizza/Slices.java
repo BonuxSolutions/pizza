@@ -7,7 +7,8 @@ import static java.lang.Math.max;
 import static java.lang.Math.min;
 
 final class Slice {
-    final int r1, c1, r2, c2, area;
+    private final int r1, c1, r2, c2;
+    final int area;
 
     private Slice(int r1, int c1, int r2, int c2) {
         this.r1 = r1;
@@ -62,18 +63,13 @@ final class Slice {
         }
     }
 
+    static Comparator<Slice> comparator() {
+        return (Slice o1, Slice o2) -> (o1.r1 - o2.r1 == 0) ? o1.c1 - o2.c1 : o1.r1 - o2.r1;
+    }
+
     @Override
     public String toString() {
         return r1 + " " + c1 + " " + r2 + " " + c2;
-    }
-
-    static Comparator<Slice> comparator() {
-        return (Slice o1, Slice o2) -> {
-            if (o1.r1 == o2.r1 && o1.c1 == o2.c1) return 0;
-            else if (o1.r1 < o2.r1) return -1;
-            else if (o1.c1 < o2.c1) return -1;
-            else return 1;
-        };
     }
 }
 

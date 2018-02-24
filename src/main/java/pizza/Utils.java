@@ -1,16 +1,30 @@
 package pizza;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 import static pizza.FunctionsAndConstants.M;
 import static pizza.FunctionsAndConstants.T;
 
 abstract class FileUtils {
+    static Consumer<String> writeFile(Result result) {
+        return fileName -> {
+            try (FileOutputStream fos = new FileOutputStream(fileName)) {
+                fos.write(result.toString().getBytes());
+                fos.flush();
+            } catch (IOException e) {
+                e.printStackTrace();
+                throw new RuntimeException(e);
+            }
+        };
+    }
+
     static String[] readFile(String filename) {
         StringBuilder contentBuilder = new StringBuilder();
 
