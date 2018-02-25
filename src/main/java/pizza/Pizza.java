@@ -1,7 +1,6 @@
 package pizza;
 
 import java.util.*;
-import java.util.function.BinaryOperator;
 
 import static pizza.FunctionsAndConstants.M;
 import static pizza.PizzaParser.SliceOffset;
@@ -108,8 +107,6 @@ final class PizzaSlicer {
         return currentState;
     }
 
-    private BinaryOperator<Integer> addition = (i1, i2) -> i1 + i2;
-
     Collection<Slice> withMaxArea(Set<Slice> slices) {
         List<Slice> oslices = new ArrayList<>(slices);
         oslices.sort(Slice.comparator());
@@ -129,12 +126,12 @@ final class PizzaSlicer {
                 }
                 if (add) newSliceSet.add(s2);
             }
-            int currentAreaCovered = slicesWithMaxAreaCovered.stream().map(k -> k.area).reduce(0, addition);
-            int newAreaCovered = newSliceSet.stream().map(k -> k.area).reduce(0, addition);
+            int currentAreaCovered = slicesWithMaxAreaCovered.stream().map(k -> k.area).reduce(0, Integer::sum);
+            int newAreaCovered = newSliceSet.stream().map(k -> k.area).reduce(0, Integer::sum);
             if (newAreaCovered > currentAreaCovered) {
                 slicesWithMaxAreaCovered = newSliceSet;
             }
-            if(newAreaCovered == pizza.R * pizza.C){
+            if (newAreaCovered == pizza.R * pizza.C) {
                 return slicesWithMaxAreaCovered;
             }
         }

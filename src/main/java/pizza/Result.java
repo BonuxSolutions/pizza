@@ -38,6 +38,6 @@ class Result {
             i += 1;
             if (i + 1 <= slices.size()) slicesAsString.append("\n");
         }
-        return slices.stream().map(s -> s.area).reduce(0, (i1, i2) -> i1 + i2) + "\n" + slicesAsString.toString();
+        return slices.stream().map(s -> s.area).reduce(0, Integer::sum) + "\n" + slicesAsString.toString();
     }
 }
