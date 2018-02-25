@@ -5,9 +5,8 @@ package pizza;/*
 import org.junit.Test;
 
 import java.net.URL;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
@@ -76,7 +75,7 @@ public class AppTest {
                         .map(PizzaParser::parseFromArray);
 
         maybePizza.ifPresent(pizza -> {
-            Set<Slice> legalSlices = new HashSet<>();
+            List<Slice> legalSlices = new ArrayList<>();
             Slice slice1 = new Slice.Builder()
                     .withUpperLeft(0, 0)
                     .withLowerRight(2, 1)
@@ -96,10 +95,10 @@ public class AppTest {
 
             PizzaSlicer ps = PizzaSlicer.create(pizza);
             Set<Slice> slices = ps.slicePizza(toppingBases(pizza), possibleSlices(pizza.H));
-            Set<Slice> maxArea = ps.withMaxArea(slices);
+            Collection<Slice> maxArea = ps.withMaxArea(slices);
 
             assertTrue(slices.containsAll(legalSlices));
-            assertEquals(legalSlices, maxArea);
+            assertEquals(legalSlices, maxArea.stream().sorted(Slice.comparator()).collect(Collectors.toList()));
         });
     }
 
