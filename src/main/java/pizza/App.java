@@ -1,5 +1,6 @@
 package pizza;
 
+import java.util.Collection;
 import java.util.Set;
 
 import static pizza.PizzaParser.possibleSlices;
@@ -15,10 +16,10 @@ public class App {
         PizzaSlicer ps = PizzaSlicer.create(pizza);
         Set<Slice> slices = ps.slicePizza(toppingBases(pizza), possibleSlices(pizza.H));
 
-        Set<Slice> slicesMaxArea = ps.withMaxArea(slices);
+        Collection<Slice> slicesMaxArea = ps.withMaxArea(slices);
 
         Result.Builder builder = new Result.Builder(slicesMaxArea.size());
-        slicesMaxArea.forEach(s -> builder.withSlice(s));
+        slicesMaxArea.forEach(builder::withSlice);
         Result result = builder.build();
         FileUtils.writeFile(result).accept(fileName + ".out");
     }

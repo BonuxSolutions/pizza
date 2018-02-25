@@ -2,7 +2,6 @@ package pizza;
 
 import java.util.*;
 import java.util.function.BinaryOperator;
-import java.util.stream.Collectors;
 
 import static pizza.FunctionsAndConstants.M;
 import static pizza.PizzaParser.SliceOffset;
@@ -111,18 +110,19 @@ final class PizzaSlicer {
 
     private BinaryOperator<Integer> addition = (i1, i2) -> i1 + i2;
 
-    Set<Slice> withMaxArea(Set<Slice> slices) {
+    Collection<Slice> withMaxArea(Set<Slice> slices) {
         List<Slice> oslices = new ArrayList<>(slices);
         oslices.sort(Slice.comparator());
 
-        Set<Slice> slicesWithMaxAreaCovered = new HashSet<>();
+        List<Slice> slicesWithMaxAreaCovered = new LinkedList<>();
 
         for (Slice s1 : oslices) {
-            Set<Slice> newSliceSet = new HashSet<>();
+            List<Slice> newSliceSet = new LinkedList<>();
             newSliceSet.add(s1);
-            for (Slice s2 : oslices.stream().filter(s -> !s.equals(s1)).collect(Collectors.toSet())) {
+            for (Slice s2 : oslices) {
+                if (s1 == s2) continue;
                 boolean add = true;
-                for (Slice s3 : new HashSet<>(newSliceSet)) {
+                for (Slice s3 : new ArrayList<>(newSliceSet)) {
                     if (s2.intersects(s3)) {
                         add = false;
                     }
@@ -133,6 +133,9 @@ final class PizzaSlicer {
             int newAreaCovered = newSliceSet.stream().map(k -> k.area).reduce(0, addition);
             if (newAreaCovered > currentAreaCovered) {
                 slicesWithMaxAreaCovered = newSliceSet;
+            }
+            if(newAreaCovered == pizza.R * pizza.C){
+                return slicesWithMaxAreaCovered;
             }
         }
 

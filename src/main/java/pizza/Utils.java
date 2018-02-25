@@ -67,8 +67,7 @@ abstract class PizzaParser {
 
             SliceOffset that = (SliceOffset) o;
 
-            if (r != that.r) return false;
-            return c == that.c;
+            return r == that.r && c == that.c;
         }
 
         @Override
