@@ -31,3 +31,8 @@ out/
 !gradle-wrapper.jar
 
 gradle.properties
+
+.metals/
+.bloop/
+
+target/
