@@ -36,3 +36,5 @@ gradle.properties
 .bloop/
 
 target/
+
+.DS_Store
