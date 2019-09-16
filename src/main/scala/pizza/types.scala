@@ -1,8 +1,8 @@
 package pizza
 
 final case class Size(
-    x: Int,
-    y: Int
+    rows: Int,
+    cols: Int
 )
 
 sealed trait Topping {
@@ -27,11 +27,17 @@ final case class Cell(
     y: Int,
     topping: Topping,
     inSlice: Boolean = false
-)
+) {
+  override def toString: String = topping.value
+}
 
 final case class Pizza(
     size: Size,
     cells: Seq[Cell],
     minIngredientPerSlice: Int,
     maxCellsPerSlice: Int
-)
+) {
+  override def toString: String = cells.map { cell =>
+    cell + (if (cell.x == size.rows - 1) "\n" else "")
+  }
+}
