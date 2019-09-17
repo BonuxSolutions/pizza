@@ -69,7 +69,7 @@ object PizzaParser {
 object PizzaParserApp extends App {
   import PizzaParser._
 
-  val (p, pc) = createPizza("small")
+  val (p, pc) = createPizza("example")
 
   val pizza = pizzaToString(p)(pc)
 
