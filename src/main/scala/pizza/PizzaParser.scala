@@ -3,15 +3,15 @@ import scala.io.Source
 
 object PizzaParser {
   private case class PizzaPlainConfig(
-      R: Int,
-      C: Int,
-      L: Int,
-      H: Int,
-      cells: Seq[String]
+    R: Int,
+    C: Int,
+    L: Int,
+    H: Int,
+    cells: Seq[String],
   )
   private def readConfig(file: String): PizzaPlainConfig = {
     val src = Source.fromInputStream(
-      getClass().getClassLoader().getResourceAsStream(file)
+      getClass().getClassLoader().getResourceAsStream(file),
     )
     val lines = src.getLines().toList
     println(lines.mkString("\n"))
@@ -20,9 +20,8 @@ object PizzaParser {
     val Array(r, c, l, h) = lines.head.split(" ").map(_.toInt)
     PizzaPlainConfig(r, c, l, h, lines.tail)
   }
-  def createPizza(
-      inputSet: String
-  ): (Pizza, PizzaConfig) = {
+
+  def createPizza(inputSet: String): (Pizza, PizzaConfig) = {
     val pizzaConfig: PizzaPlainConfig = readConfig(s"$inputSet.in")
     (
       Pizza(
@@ -36,34 +35,34 @@ object PizzaParser {
                   sys.error(s"Col too big: $col. Max expected ${pizzaConfig.C}")
                 val coords = Coords(
                   x = col,
-                  y = row
+                  y = row,
                 )
                 coords.key -> Cell(
                   coords = coords,
-                  topping = Topping(topping)
-                )
+                  topping = Topping(topping),
+                ),
             }
-        }
+        },
       ),
       PizzaConfig(
         size = Size(
           rows = pizzaConfig.R,
-          cols = pizzaConfig.C
+          cols = pizzaConfig.C,
         ),
         minIngredientPerSlice = pizzaConfig.L,
-        maxCellsPerSlice = pizzaConfig.H
-      )
+        maxCellsPerSlice = pizzaConfig.H,
+      ),
     )
   }
-  def pizzaToString(
-      pizza: Pizza
-  )(
-      pizzaConfig: PizzaConfig
-  ) =
-    pizza.cells.map(_._2).map { cell =>
-      cell + (if ((cell.coords.x + 1) % pizzaConfig.size.cols == 0) "\n"
-              else "")
-    }.mkString
+
+  def pizzaToString(pizza: Pizza)(pizzaConfig: PizzaConfig) =
+    pizza.cells
+      .map(_._2)
+      .map { cell =>
+        cell + (if ((cell.coords.x + 1) % pizzaConfig.size.cols == 0) "\n"
+                else "")
+      }
+      .mkString
 }
 
 object PizzaParserApp extends App {

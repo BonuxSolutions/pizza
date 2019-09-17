@@ -1,19 +1,20 @@
 package pizza
 
 final case class Size(
-    rows: Int,
-    cols: Int
+  rows: Int,
+  cols: Int,
 )
 
 final case class PizzaConfig(
   size: Size,
   minIngredientPerSlice: Int,
-  maxCellsPerSlice: Int
+  maxCellsPerSlice: Int,
 )
 
 sealed trait Topping {
   def value: Char
 }
+
 object Topping {
   case object Tomato extends Topping {
     override def value: Char = 'T'
@@ -33,29 +34,25 @@ object Topping {
 final case class Key(value: String) extends AnyVal
 
 final case class Coords(
-    x: Int,
-    y: Int
-){
-    def key: Key = Key(s"$x-$y")
+  x: Int,
+  y: Int,
+) {
+  def key: Key = Key(s"$x-$y")
 }
 
 final case class Cell(
-    coords: Coords,
-    topping: Topping,
-    inSlice: Boolean = false
+  coords: Coords,
+  topping: Topping,
+  inSlice: Boolean = false,
 ) {
   override def toString: String = topping.value.toString
 }
 
-final case class Pizza(
-    cells: Seq[(Key, Cell)],
-)
+final case class Pizza(cells: Seq[(Key, Cell)])
 
 final case class Slice(
-    upperLeft: Coords,
-    lowerRight: Coords
+  upperLeft: Coords,
+  lowerRight: Coords,
 )
 
-final case class CutPizza(
-    slices: Seq[Slice]
-)
+final case class CutPizza(slices: Seq[Slice])
