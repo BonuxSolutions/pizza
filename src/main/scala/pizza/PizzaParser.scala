@@ -14,8 +14,6 @@ object PizzaParser {
       getClass().getClassLoader().getResourceAsStream(file),
     )
     val lines = src.getLines().toList
-    println(lines.mkString("\n"))
-    println()
     src.close()
     val Array(r, c, l, h) = lines.head.split(" ").map(_.toInt)
     PizzaPlainConfig(r, c, l, h, lines.tail)
@@ -55,6 +53,13 @@ object PizzaParser {
     )
   }
 
+  def outputCutPizza(cutPizza: CutPizza): Seq[String] =
+    s"${cutPizza.slices.size}" :: cutPizza.slices.map(s => s"${s.upperLeft.x} ${s.upperLeft.y} ${s.lowerRight.x} ${s.lowerRight.y}").toList
+}
+
+object PizzaParserApp extends App {
+  import PizzaParser._
+
   def pizzaToString(pizza: Pizza)(pizzaConfig: PizzaConfig) =
     pizza.cells
       .map(_._2)
@@ -63,13 +68,6 @@ object PizzaParser {
                 else "")
       }
       .mkString
-
-  def outputCutPizza(cutPizza: CutPizza): Seq[String] =
-    s"${cutPizza.slices.size}" :: cutPizza.slices.map(s => s"${s.upperLeft.x} ${s.upperLeft.y} ${s.lowerRight.x} ${s.lowerRight.y}").toList
-}
-
-object PizzaParserApp extends App {
-  import PizzaParser._
 
   val (p, pc) = createPizza("example")
 
