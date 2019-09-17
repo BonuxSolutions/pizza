@@ -2,54 +2,76 @@ package pizza
 import scala.io.Source
 
 object PizzaParser {
-  private case class PizzaConfig(
+  private case class PizzaPlainConfig(
       R: Int,
       C: Int,
       L: Int,
       H: Int,
       cells: Seq[String]
   )
-  private def readConfig(file: STring): PizzaConfig = {
+  private def readConfig(file: String): PizzaPlainConfig = {
     val src = Source.fromInputStream(
       getClass().getClassLoader().getResourceAsStream(file)
     )
     val lines = src.getLines().toList
+    println(lines.mkString("\n"))
+    println()
     src.close()
-    val Array(R, C, L, H) = lines.head.split(" ").toList.map(_.toInt)
-    PizzaConfig(R, C, L, H, lines.tail)
+    val Array(r, c, l, h) = lines.head.split(" ").map(_.toInt)
+    PizzaPlainConfig(r, c, l, h, lines.tail)
   }
   def createPizza(
       inputSet: String
-  ): Pizza = {
-    val pizzaConfig: PizzaConfig = readConfig(s"$inputset.in")
-    Pizza(
-      size = Size(
-        rows = pizzaConfig.R,
-        cols = pizzaConfig.C
-      ),
-      minIngredientPerSlice = pizzaConfig.L,
-      maxCellsPerSlice = pizzaCofig.H,
-      cells = pizzaConfig.cells.zipWithIndex.flatMap { (line, row) =>
-        if (row > pizzaConfig.R)
-          sys.error(s"Row too big: $row. Max expected ${pizzaCofig.R}")
-        line.zipWithIndex { (topping, col) =>
-          if (col > pizzaConfig.C)
-            sys.error(s"Col too big: $col. Max expected ${pizzaConfig.C}")
-          Cell(
-            x = row,
-            y = col,
-            topping = Topping(topping)
-          )
+  ): (Pizza, PizzaConfig) = {
+    val pizzaConfig: PizzaPlainConfig = readConfig(s"$inputSet.in")
+    (
+      Pizza(
+        cells = pizzaConfig.cells.zipWithIndex.flatMap {
+          case (line, row) =>
+            if (row > pizzaConfig.R)
+              sys.error(s"Row too big: $row. Max expected ${pizzaConfig.R}")
+            line.zipWithIndex.map {
+              case (topping, col) =>
+                if (col > pizzaConfig.C)
+                  sys.error(s"Col too big: $col. Max expected ${pizzaConfig.C}")
+                val coords = Coords(
+                  x = col,
+                  y = row
+                )
+                coords.key -> Cell(
+                  coords = coords,
+                  topping = Topping(topping)
+                )
+            }
         }
-      }
+      ),
+      PizzaConfig(
+        size = Size(
+          rows = pizzaConfig.R,
+          cols = pizzaConfig.C
+        ),
+        minIngredientPerSlice = pizzaConfig.L,
+        maxCellsPerSlice = pizzaConfig.H
+      )
     )
   }
+  def pizzaToString(
+      pizza: Pizza
+  )(
+      pizzaConfig: PizzaConfig
+  ) =
+    pizza.cells.map(_._2).map { cell =>
+      cell + (if ((cell.coords.x + 1) % pizzaConfig.size.cols == 0) "\n"
+              else "")
+    }.mkString
 }
 
 object PizzaParserApp extends App {
   import PizzaParser._
 
-  val pizza = createPizza("small")
+  val (p, pc) = createPizza("small")
 
-  println(pizza.toString)
+  val pizza = pizzaToString(p)(pc)
+
+  println(pizza)
 }

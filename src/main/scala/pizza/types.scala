@@ -5,39 +5,57 @@ final case class Size(
     cols: Int
 )
 
+final case class PizzaConfig(
+  size: Size,
+  minIngredientPerSlice: Int,
+  maxCellsPerSlice: Int
+)
+
 sealed trait Topping {
-  def value: String
+  def value: Char
 }
 object Topping {
   case object Tomato extends Topping {
-    override def value: String = "T"
+    override def value: Char = 'T'
   }
   case object Mushroom extends Topping {
-    override def value: String = "M"
+    override def value: Char = 'M'
   }
 
   private val toppings: Seq[Topping] = Seq(Tomato, Mushroom)
 
-  def apply(v: String): Topping =
-    toppings.find(_ == v).getOrElse(sys.error(s"topping $v not recognized"))
+  def apply(v: Char): Topping =
+    toppings
+      .find(_.value == v)
+      .getOrElse(sys.error(s"topping $v not recognized"))
+}
+
+final case class Key(value: String) extends AnyVal
+
+final case class Coords(
+    x: Int,
+    y: Int
+){
+    def key: Key = Key(s"$x-$y")
 }
 
 final case class Cell(
-    x: Int,
-    y: Int,
+    coords: Coords,
     topping: Topping,
     inSlice: Boolean = false
 ) {
-  override def toString: String = topping.value
+  override def toString: String = topping.value.toString
 }
 
 final case class Pizza(
-    size: Size,
-    cells: Seq[Cell],
-    minIngredientPerSlice: Int,
-    maxCellsPerSlice: Int
-) {
-  override def toString: String = cells.map { cell =>
-    cell + (if (cell.x == size.rows - 1) "\n" else "")
-  }
-}
+    cells: Seq[(Key, Cell)],
+)
+
+final case class Slice(
+    upperLeft: Coords,
+    lowerRight: Coords
+)
+
+final case class CutPizza(
+    slices: Seq[Slice]
+)
