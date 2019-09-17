@@ -63,6 +63,9 @@ object PizzaParser {
                 else "")
       }
       .mkString
+
+  def outputCutPizza(cutPizza: CutPizza): Seq[String] =
+    s"${cutPizza.slices.size}" :: cutPizza.slices.map(s => s"${s.upperLeft.x} ${s.upperLeft.y} ${s.lowerRight.x} ${s.lowerRight.y}").toList
 }
 
 object PizzaParserApp extends App {
@@ -73,4 +76,23 @@ object PizzaParserApp extends App {
   val pizza = pizzaToString(p)(pc)
 
   println(pizza)
+
+  val cutPizza = CutPizza(
+    slices = Vector(
+      Slice(
+        upperLeft = Coords(0, 0),
+        lowerRight = Coords(2, 1),
+      ),
+      Slice(
+        upperLeft = Coords(0, 2),
+        lowerRight = Coords(2, 2),
+      ),
+      Slice(
+        upperLeft = Coords(0, 3),
+        lowerRight = Coords(2, 4),
+      ),
+    )
+  )
+
+  println(outputCutPizza(cutPizza).mkString("\n"))
 }
