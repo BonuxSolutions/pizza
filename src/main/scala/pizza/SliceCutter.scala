@@ -36,7 +36,7 @@ class SliceCutter(pizzaConfig: PizzaConfig) {
       }
   }
 
-  val allShapes: Seq[Shape] = {
+  private val allShapes: Seq[Shape] = {
     val minElements = pizzaConfig.minIngredientPerSlice * 2
     val maxElements = pizzaConfig.maxCellsPerSlice
 
@@ -55,7 +55,31 @@ class SliceCutter(pizzaConfig: PizzaConfig) {
     }
   }
 
-  def allSlices(pizza: Pizza)(upperLeft: Coords): Seq[Slice] = {
-    ???
-  }
+  def allSlices(pizza: Pizza)(upperLeft: Coords): Seq[Slice] =
+    allShapes.map { shape =>
+      Slice(
+        upperLeft = upperLeft,
+        lowerRight = upperLeft.copy(
+          x = upperLeft.x + shape.a,
+          y = upperLeft.y + shape.b,
+        ),
+      )
+    }.filter { slice =>
+      slice.upperLeft.x >= 0 &&
+      slice.lowerRight.x <= pizzaConfig.size.cols &&
+      slice.upperLeft.y >= 0 &&
+      slice.lowerRight.y <= pizzaConfig.size.rows
+    }.filter { slice =>
+      pizza.cells
+        .map(_._2)
+        .filter { cell =>
+          cell.coords.x >= slice.lowerRight.x &&
+          cell.coords.x <= slice.upperLeft.x &&
+          cell.coords.y >= slice.lowerRight.y &&
+          cell.coords.y <= slice.upperLeft.y
+        }
+        .forall { cell =>
+          !cell.inSlice
+        }
+    }
 }

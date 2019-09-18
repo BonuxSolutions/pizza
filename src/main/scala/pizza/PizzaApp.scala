@@ -40,5 +40,5 @@ object PizzaApp extends App {
 
   val gen = new SliceCutter(pc)
 
-  println(gen.allShapes.mkString("\n"))
+  println(gen.allSlices(p)(Coords(0, 0)).mkString("\n"))
 }
