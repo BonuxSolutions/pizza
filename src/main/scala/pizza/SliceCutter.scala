@@ -1,4 +1,6 @@
 package pizza
+import pizza.Topping.Tomato
+import pizza.Topping.Mushroom
 
 class SliceCutter(pizzaConfig: PizzaConfig) {
 
@@ -70,16 +72,27 @@ class SliceCutter(pizzaConfig: PizzaConfig) {
       slice.upperLeft.y >= 0 &&
       slice.lowerRight.y <= pizzaConfig.size.rows
     }.filter { slice =>
-      pizza.cells
+      val cells = pizza.cells
         .map(_._2)
         .filter { cell =>
-          cell.coords.x >= slice.lowerRight.x &&
-          cell.coords.x <= slice.upperLeft.x &&
-          cell.coords.y >= slice.lowerRight.y &&
-          cell.coords.y <= slice.upperLeft.y
+          cell.coords.x <= slice.lowerRight.x &&
+          cell.coords.x >= slice.upperLeft.x &&
+          cell.coords.y <= slice.lowerRight.y &&
+          cell.coords.y >= slice.upperLeft.y
         }
-        .forall { cell =>
-          !cell.inSlice
-        }
+
+      cells.count(_.topping == Tomato) >= pizzaConfig.minIngredientPerSlice &&
+      cells.count(_.topping == Mushroom) >= pizzaConfig.minIngredientPerSlice &&
+      cells.forall { cell =>
+        !cell.inSlice
+      }
     }
+
+  def nextRandomSlice(pizza: Pizza)(upperLeft: Coords): Option[Slice] = {
+    import scala.util.Random
+
+    val slices = allSlices(pizza)(upperLeft)
+    val n = Random.nextInt(slices.size)
+    slices.zipWithIndex.find(_._2 == n).map(_._1)
+  }
 }

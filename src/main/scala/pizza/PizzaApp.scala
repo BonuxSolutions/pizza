@@ -41,4 +41,6 @@ object PizzaApp extends App {
   val gen = new SliceCutter(pc)
 
   println(gen.allSlices(p)(Coords(0, 0)).mkString("\n"))
+  println()
+  println(gen.nextRandomSlice(p)(Coords(0, 0)).mkString("\n"))
 }
