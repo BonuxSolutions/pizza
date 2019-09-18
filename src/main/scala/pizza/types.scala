@@ -56,3 +56,8 @@ final case class Slice(
 )
 
 final case class CutPizza(slices: Seq[Slice])
+
+final case class Shape(
+  a: Int,
+  b: Int,
+)

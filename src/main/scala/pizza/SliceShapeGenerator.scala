@@ -1,3 +1,0 @@
-package pizza
-
-object SliceShapeGenerator

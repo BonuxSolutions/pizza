@@ -54,43 +54,7 @@ object PizzaParser {
   }
 
   def outputCutPizza(cutPizza: CutPizza): Seq[String] =
-    s"${cutPizza.slices.size}" :: cutPizza.slices.map(s => s"${s.upperLeft.x} ${s.upperLeft.y} ${s.lowerRight.x} ${s.lowerRight.y}").toList
-}
-
-object PizzaParserApp extends App {
-  import PizzaParser._
-
-  def pizzaToString(pizza: Pizza)(pizzaConfig: PizzaConfig) =
-    pizza.cells
-      .map(_._2)
-      .map { cell =>
-        cell + (if ((cell.coords.x + 1) % pizzaConfig.size.cols == 0) "\n"
-                else "")
-      }
-      .mkString
-
-  val (p, pc) = createPizza("example")
-
-  val pizza = pizzaToString(p)(pc)
-
-  println(pizza)
-
-  val cutPizza = CutPizza(
-    slices = Vector(
-      Slice(
-        upperLeft = Coords(0, 0),
-        lowerRight = Coords(2, 1),
-      ),
-      Slice(
-        upperLeft = Coords(0, 2),
-        lowerRight = Coords(2, 2),
-      ),
-      Slice(
-        upperLeft = Coords(0, 3),
-        lowerRight = Coords(2, 4),
-      ),
-    )
-  )
-
-  println(outputCutPizza(cutPizza).mkString("\n"))
+    s"${cutPizza.slices.size}" :: cutPizza.slices
+      .map(s => s"${s.upperLeft.x} ${s.upperLeft.y} ${s.lowerRight.x} ${s.lowerRight.y}")
+      .toList
 }
