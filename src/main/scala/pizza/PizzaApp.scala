@@ -8,7 +8,7 @@ object PizzaApp extends App {
     pizza.cells
       .map(_._2)
       .map { cell =>
-        cell + (if ((cell.coords.x + 1) % pizzaConfig.size.cols == 0) "\n"
+        cell.toString + (if ((cell.coords.x + 1) % pizzaConfig.size.cols == 0) "\n"
                 else "")
       }
       .mkString
@@ -39,7 +39,7 @@ object PizzaApp extends App {
 
   println(outputCutPizza(cutPizza).mkString("\n"))
 
-  val gen = SliceProvider(pc, UpperLeft(RandomSlice))
+  val gen = SliceProvider(pc, SlicerStrategy(RandomSlice, GoLeft))
 
   println()
   println(gen.nextSlice(p)(Coords(0, 0)).mkString("\n"))

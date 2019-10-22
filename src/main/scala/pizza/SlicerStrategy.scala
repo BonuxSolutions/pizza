@@ -2,11 +2,10 @@ package pizza
 
 import SlicerStrategy._
 
-trait SlicerStrategy {
-  def startX: Int
-  def startY: Int
-  def sliceSize: SliceSize
-}
+final case class SlicerStrategy(
+  sliceSize: SliceSize,
+  direction: Direction,
+)
 
 object SlicerStrategy {
   sealed trait SliceSize
@@ -14,8 +13,7 @@ object SlicerStrategy {
   case object MinSlice extends SliceSize
   case object RandomSlice extends SliceSize
 
-  final case class UpperLeft(sliceSize: SliceSize) extends SlicerStrategy {
-    override val startX = 0
-    override val startY = 0
-  }
+  sealed trait Direction
+  case object GoLeft extends Direction
+  case object GoDown extends Direction
 }
