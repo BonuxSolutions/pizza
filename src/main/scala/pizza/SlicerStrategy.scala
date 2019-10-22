@@ -10,10 +10,10 @@ sealed trait SliceSize
 object SlicerStrategy {
   case object MaxSlice extends SliceSize
   case object MinSlice extends SliceSize
+  case object RandomSlice extends SliceSize
 
-  case object UpperLeftMaxSize extends SlicerStrategy {
+  final case class UpperLeft(sliceSize: SliceSize) extends SlicerStrategy {
     override val startX = 0
     override val startY = 0
-    override val sliceSize = MaxSlice
   }
 }

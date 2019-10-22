@@ -1,8 +1,12 @@
 package pizza
 import pizza.Topping.Tomato
 import pizza.Topping.Mushroom
+import pizza.SlicerStrategy._
 
-class SliceCutter(pizzaConfig: PizzaConfig) {
+class SliceCutter(
+  pizzaConfig: PizzaConfig,
+  slicerStrategy: SlicerStrategy,
+) {
 
   /**
     *  code taken and adjusted from [[https://kostyukov.net/posts/combinatorial-algorithms-in-scala/]]
@@ -41,9 +45,6 @@ class SliceCutter(pizzaConfig: PizzaConfig) {
   private val allShapes: Seq[Shape] = {
     val minElements = pizzaConfig.minIngredientPerSlice * 2
     val maxElements = pizzaConfig.maxCellsPerSlice
-
-    println(s"maxelements=$maxElements")
-
     val l = (0 until maxElements).toList
     val variants = xvariations(l)(2)
     val samePairs = l.zip(l).map { case (a, b) => List(a, b) }
@@ -88,11 +89,17 @@ class SliceCutter(pizzaConfig: PizzaConfig) {
       }
     }
 
-  def nextRandomSlice(pizza: Pizza)(upperLeft: Coords): Option[Slice] = {
+  private def nextRandomSlice(pizza: Pizza)(upperLeft: Coords): Option[Slice] = {
     import scala.util.Random
 
     val slices = allSlices(pizza)(upperLeft)
     val n = Random.nextInt(slices.size)
     slices.zipWithIndex.find(_._2 == n).map(_._1)
+  }
+
+  def nextSlice(pizza: Pizza)(upperLeft: Coords): Option[Slice] = slicerStrategy.sliceSize match {
+    case MaxSlice => allSlices(pizza)(upperLeft).maxByOption(_.area)
+    case MinSlice => allSlices(pizza)(upperLeft).minByOption(_.area)
+    case RandomSlice => nextRandomSlice(pizza)(upperLeft)
   }
 }

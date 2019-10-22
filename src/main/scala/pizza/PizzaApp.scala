@@ -1,4 +1,5 @@
 package pizza
+import SlicerStrategy._
 
 object PizzaApp extends App {
   import PizzaParser._
@@ -38,9 +39,11 @@ object PizzaApp extends App {
 
   println(outputCutPizza(cutPizza).mkString("\n"))
 
-  val gen = new SliceCutter(pc)
+  val gen = new SliceCutter(pc, UpperLeft(RandomSlice))
 
   println(gen.allSlices(p)(Coords(0, 0)).mkString("\n"))
   println()
-  println(gen.nextRandomSlice(p)(Coords(0, 0)).mkString("\n"))
+  println(gen.nextSlice(p)(Coords(0, 0)).mkString("\n"))
+
+  println(cutPizza.slices.map(_.area).sum)
 }

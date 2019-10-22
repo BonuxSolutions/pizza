@@ -53,9 +53,13 @@ final case class Pizza(cells: Seq[(Key, Cell)])
 final case class Slice(
   upperLeft: Coords,
   lowerRight: Coords,
-)
+) {
+  def area: Int = (lowerRight.x - upperLeft.x + 1) * (lowerRight.y - upperLeft.y + 1)
+}
 
-final case class CutPizza(slices: Seq[Slice])
+final case class CutPizza(slices: Seq[Slice]) {
+  def score: Int = slices.map(_.area).sum
+}
 
 final case class Shape(
   a: Int,

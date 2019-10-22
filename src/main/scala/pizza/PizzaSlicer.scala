@@ -1,8 +1,15 @@
 package pizza
 
 class PizzaSlicer(
-    pizzaConfig: PizzaConfig,
-    slicerStrategy: SlicerStrategy
+  pizzaConfig: PizzaConfig,
+  slicerStrategy: SlicerStrategy,
 ) {
-  def slice(pizza: Pizza): CutPizza = ???
+  val cutter = new SliceCutter(
+    pizzaConfig = pizzaConfig,
+    slicerStrategy = slicerStrategy,
+  )
+
+  def slice(pizza: Pizza): CutPizza = {
+    ???
+  }
 }
