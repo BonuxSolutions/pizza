@@ -4,7 +4,7 @@ class PizzaSlicer(
   pizzaConfig: PizzaConfig,
   slicerStrategy: SlicerStrategy,
 ) {
-  val cutter = new SliceCutter(
+  val cutter = SliceProvider(
     pizzaConfig = pizzaConfig,
     slicerStrategy = slicerStrategy,
   )
