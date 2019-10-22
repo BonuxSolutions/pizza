@@ -39,7 +39,7 @@ object PizzaApp extends App {
 
   println(outputCutPizza(cutPizza).mkString("\n"))
 
-  val gen = new SliceCutter(pc, UpperLeft(RandomSlice))
+  val gen = SliceProvider(pc, UpperLeft(RandomSlice))
 
   println()
   println(gen.nextSlice(p)(Coords(0, 0)).mkString("\n"))
