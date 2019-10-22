@@ -1,13 +1,15 @@
 package pizza
 
+import SlicerStrategy._
+
 trait SlicerStrategy {
   def startX: Int
   def startY: Int
   def sliceSize: SliceSize
 }
 
-sealed trait SliceSize
 object SlicerStrategy {
+  sealed trait SliceSize
   case object MaxSlice extends SliceSize
   case object MinSlice extends SliceSize
   case object RandomSlice extends SliceSize

@@ -1,12 +1,19 @@
 package pizza
 import pizza.Topping.Tomato
 import pizza.Topping.Mushroom
+<<<<<<< HEAD:src/main/scala/pizza/SliceCutter.scala
 import pizza.SlicerStrategy._
 
 class SliceCutter(
   pizzaConfig: PizzaConfig,
   slicerStrategy: SlicerStrategy,
 ) {
+=======
+import pizza.SlicerStrategy.MaxSlice
+import pizza.SlicerStrategy.MinSlice
+
+private[pizza] class SliceProvider(pizzaConfig: PizzaConfig) {
+>>>>>>> 00c14255a186ccbbcc8205823dcc5e4fc7658fd5:src/main/scala/pizza/SliceProvider.scala
 
   /**
     *  code taken and adjusted from [[https://kostyukov.net/posts/combinatorial-algorithms-in-scala/]]
@@ -58,7 +65,7 @@ class SliceCutter(
     }
   }
 
-  def allSlices(pizza: Pizza)(upperLeft: Coords): Seq[Slice] =
+  private def allSlices(pizza: Pizza)(upperLeft: Coords): Seq[Slice] =
     allShapes.map { shape =>
       Slice(
         upperLeft = upperLeft,
@@ -89,7 +96,32 @@ class SliceCutter(
       }
     }
 
+<<<<<<< HEAD:src/main/scala/pizza/SliceCutter.scala
   private def nextRandomSlice(pizza: Pizza)(upperLeft: Coords): Option[Slice] = {
+=======
+  private def area(
+    upperLeft: Coords,
+    lowerRight: Coords,
+  ): Int =
+    (lowerRight.x - upperLeft.x) * (lowerRight.y - upperLeft.y)
+
+  private def area(slice: Slice): Int = area(slice.upperLeft, slice.lowerRight)
+
+  def nextSlice(
+    pizza: Pizza,
+  )(
+    upperLeft: Coords,
+    slicerStrategy: SlicerStrategy,
+  ): Option[Slice] = {
+    val sortedSlices = allSlices(pizza)(upperLeft).sortBy(area)
+    slicerStrategy.sliceSize match {
+      case MaxSlice => sortedSlices.lastOption
+      case MinSlice => sortedSlices.headOption
+    }
+  }
+
+  def nextRandomSlice(pizza: Pizza)(upperLeft: Coords): Option[Slice] = {
+>>>>>>> 00c14255a186ccbbcc8205823dcc5e4fc7658fd5:src/main/scala/pizza/SliceProvider.scala
     import scala.util.Random
 
     val slices = allSlices(pizza)(upperLeft)
@@ -102,4 +134,8 @@ class SliceCutter(
     case MinSlice => allSlices(pizza)(upperLeft).minByOption(_.area)
     case RandomSlice => nextRandomSlice(pizza)(upperLeft)
   }
+}
+
+object SliceProvider {
+  def apply(pizzaConfig: PizzaConfig): SliceProvider = new SliceProvider(pizzaConfig)
 }
