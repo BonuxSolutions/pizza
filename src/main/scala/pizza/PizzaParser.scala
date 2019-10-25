@@ -40,7 +40,7 @@ object PizzaParser {
                   topping = Topping(topping),
                 ),
             }
-        },
+        }.toMap,
       ),
       PizzaConfig(
         size = Size(

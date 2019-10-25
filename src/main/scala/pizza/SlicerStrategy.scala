@@ -4,7 +4,7 @@ import SlicerStrategy._
 
 final case class SlicerStrategy(
   sliceSize: SliceSize,
-  direction: Direction,
+  directionPreference: DirectionPreference,
 )
 
 object SlicerStrategy {
@@ -13,7 +13,7 @@ object SlicerStrategy {
   case object MinSlice extends SliceSize
   case object RandomSlice extends SliceSize
 
-  sealed trait Direction
-  case object GoLeft extends Direction
-  case object GoDown extends Direction
+  sealed trait DirectionPreference
+  case object Horizontal extends DirectionPreference
+  case object Vertical extends DirectionPreference
 }

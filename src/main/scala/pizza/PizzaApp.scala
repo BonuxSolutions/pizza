@@ -17,32 +17,13 @@ object PizzaApp extends App {
 
   val pizza = pizzaToString(p)(pc)
 
-  println(pizza)
-  println(pc)
+  val strategy = SlicerStrategy(RandomSlice, Horizontal)
 
-  val cutPizza = CutPizza(
-    slices = Vector(
-      Slice(
-        upperLeft = Coords(0, 0),
-        lowerRight = Coords(2, 1),
-      ),
-      Slice(
-        upperLeft = Coords(0, 2),
-        lowerRight = Coords(2, 2),
-      ),
-      Slice(
-        upperLeft = Coords(0, 3),
-        lowerRight = Coords(2, 4),
-      ),
-    ),
+  val pizzaSlicer = new PizzaSlicer(
+    pizzaConfig = pc,
+    slicerStrategy = strategy,
   )
 
-  println(outputCutPizza(cutPizza).mkString("\n"))
-
-  val gen = SliceProvider(pc, SlicerStrategy(RandomSlice, GoLeft))
-
-  println()
-  println(gen.nextSlice(p)(Coords(0, 0)).mkString("\n"))
-
-  println(cutPizza.slices.map(_.area).sum)
+  val cpr = pizzaSlicer.slice(p)
+  println(s"score=${cpr.score}")
 }

@@ -33,11 +33,19 @@ object Topping {
 
 final case class Key(value: String) extends AnyVal
 
+object Key {
+
+  def toKey(
+    x: Int,
+    y: Int,
+  ) = Key(s"$x-$y")
+}
+
 final case class Coords(
   x: Int,
   y: Int,
 ) {
-  def key: Key = Key(s"$x-$y")
+  def key: Key = Key.toKey(x, y)
 }
 
 final case class Cell(
@@ -48,7 +56,7 @@ final case class Cell(
   override def toString: String = topping.value.toString
 }
 
-final case class Pizza(cells: Seq[(Key, Cell)])
+final case class Pizza(cells: Map[Key, Cell])
 
 final case class Slice(
   upperLeft: Coords,
@@ -57,7 +65,7 @@ final case class Slice(
   def area: Int = (lowerRight.x - upperLeft.x + 1) * (lowerRight.y - upperLeft.y + 1)
 }
 
-final case class CutPizza(slices: Seq[Slice]) {
+final case class CutPizza(slices: List[Slice]) {
   def score: Int = slices.map(_.area).sum
 }
 
