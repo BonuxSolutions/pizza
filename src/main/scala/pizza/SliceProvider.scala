@@ -69,9 +69,9 @@ class SliceProvider(
       )
     }.filter { slice =>
       slice.upperLeft.x >= 0 &&
-      slice.lowerRight.x <= pizzaConfig.size.cols &&
       slice.upperLeft.y >= 0 &&
-      slice.lowerRight.y <= pizzaConfig.size.rows
+      slice.lowerRight.x < pizzaConfig.size.cols &&
+      slice.lowerRight.y < pizzaConfig.size.rows
     }.filter { slice =>
       val cells = pizza.cells
         .map(_._2)
@@ -83,28 +83,31 @@ class SliceProvider(
         }
 
       cells.count(_.topping == Tomato) >= pizzaConfig.minIngredientPerSlice &&
-      cells.count(_.topping == Mushroom) >= pizzaConfig.minIngredientPerSlice &&
-      cells.forall { cell =>
-        !cell.inSlice
-      }
+      cells.count(_.topping == Mushroom) >= pizzaConfig.minIngredientPerSlice
     }
 
   def nextRandomSlice(pizza: Pizza)(upperLeft: Coords): Option[Slice] = {
     import scala.util.Random
 
     val slices = allSlices(pizza)(upperLeft)
-    val n = Random.nextInt(slices.size)
-    slices.zipWithIndex.find(_._2 == n).map(_._1)
+
+    if (slices.isEmpty)
+      None
+    else {
+      val n = Random.nextInt(slices.size)
+      slices.zipWithIndex.find(_._2 == n).map(_._1)
+    }
   }
 
   def nextSlice(pizza: Pizza)(upperLeft: Coords): Option[Slice] = slicerStrategy.sliceSize match {
-    case MaxSlice => allSlices(pizza)(upperLeft).maxByOption(_.area)
-    case MinSlice => allSlices(pizza)(upperLeft).minByOption(_.area)
+    case MaxSlice    => allSlices(pizza)(upperLeft).maxByOption(_.area)
+    case MinSlice    => allSlices(pizza)(upperLeft).minByOption(_.area)
     case RandomSlice => nextRandomSlice(pizza)(upperLeft)
   }
 }
 
 object SliceProvider {
+
   def apply(
     pizzaConfig: PizzaConfig,
     slicerStrategy: SlicerStrategy,

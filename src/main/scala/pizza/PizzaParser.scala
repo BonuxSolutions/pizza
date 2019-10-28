@@ -55,6 +55,6 @@ object PizzaParser {
 
   def outputCutPizza(cutPizza: CutPizza): Seq[String] =
     s"${cutPizza.slices.size}" :: cutPizza.slices
-      .map(s => s"${s.upperLeft.x} ${s.upperLeft.y} ${s.lowerRight.x} ${s.lowerRight.y}")
+      .map(s => s"${s.upperLeft.y} ${s.upperLeft.x} ${s.lowerRight.y} ${s.lowerRight.x}")
       .toList
 }

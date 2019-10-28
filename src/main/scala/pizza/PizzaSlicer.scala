@@ -24,12 +24,12 @@ class PizzaSlicer(
       }
   }
 
-  def slice(pizza: Pizza): CutPizza = {
-    @tailrec def slice(
-      keys: List[Key],
-      pizza: Pizza,
-      acc: CutPizza,
-    ): CutPizza = keys match {
+  @tailrec private def slice(
+    keys: List[Key],
+    pizza: Pizza,
+    acc: CutPizza,
+  ): CutPizza =
+    keys match {
       case Nil => acc
       case key :: rest =>
         val upperLeft = pizza.cells.get(key).map(_.coords).flatMap(cutter.nextSlice(pizza))
@@ -37,18 +37,12 @@ class PizzaSlicer(
           acc.copy(slices = slice :: acc.slices)
         }
         val pizzaNew = upperLeft.fold(pizza) { slice =>
-          (slice.upperLeft.x to slice.lowerRight.x + 1).flatMap { x =>
-            (slice.upperLeft.y to slice.upperLeft.y + 1).flatMap { y =>
-              val k = Key.toKey(x, y)
-
-              pizza.cells.get(k).map { cell =>
-                pizza.cells.updated(k, cell.copy(inSlice = true))
-              }
+          val keysToDelete = (slice.upperLeft.x to slice.lowerRight.x).flatMap { x =>
+            (slice.upperLeft.y to slice.lowerRight.y).map { y =>
+              Key.toKey(x, y)
             }
           }
-          pizza.copy(
-            cells = pizza.cells,
-          )
+          Pizza(pizza.cells.removedAll(keysToDelete))
         }
 
         slice(
@@ -57,6 +51,8 @@ class PizzaSlicer(
           acc = cutPizza,
         )
     }
+
+  def slice(pizza: Pizza): CutPizza = {
     slice(iterKeys, pizza, CutPizza(Nil))
   }
 }
