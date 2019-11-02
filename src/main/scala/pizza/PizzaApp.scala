@@ -1,5 +1,7 @@
 package pizza
 import SlicerStrategy._
+import java.io.File
+import java.io.PrintWriter
 
 object PizzaApp extends App {
   import PizzaParser._
@@ -25,5 +27,11 @@ object PizzaApp extends App {
 
   val cpr = LazyList.from(1).map(_ => pizzaSlicer.slice(p)).dropWhile(_.score < 15).head
 
-  println(outputCutPizza(cpr))
+  try {
+    val w = new PrintWriter(new File("sliced_pizza.txt"))
+    w.write(outputCutPizza(cpr).mkString("\n"))
+    w.close()
+  }catch {
+    case th: Throwable => th.printStackTrace()
+  }
 }
