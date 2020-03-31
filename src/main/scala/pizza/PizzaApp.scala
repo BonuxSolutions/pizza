@@ -28,10 +28,12 @@ object PizzaApp extends App {
   val cpr = LazyList.from(1).map(_ => pizzaSlicer.slice(p)).dropWhile(_.score < 15).head
 
   try {
-    val w = new PrintWriter(new File("sliced_pizza.txt"))
+    val dir = new File("output")
+    dir.mkdir()
+    val w = new PrintWriter(new File(dir.getPath, "sliced_pizza.txt"))
     w.write(outputCutPizza(cpr).mkString("\n"))
     w.close()
-  }catch {
+  } catch {
     case th: Throwable => th.printStackTrace()
   }
 }
