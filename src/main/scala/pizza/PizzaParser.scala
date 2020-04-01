@@ -2,6 +2,7 @@ package pizza
 import scala.io.Source
 
 object PizzaParser {
+
   private case class PizzaPlainConfig(
     R: Int,
     C: Int,
@@ -9,6 +10,7 @@ object PizzaParser {
     H: Int,
     cells: Seq[String],
   )
+
   private def readConfig(file: String): PizzaPlainConfig = {
     val src = Source.fromInputStream(
       getClass().getClassLoader().getResourceAsStream(file),
